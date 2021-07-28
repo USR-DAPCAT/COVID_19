@@ -6,6 +6,12 @@
 .RData
 .Rdata
 
+*.Rdata
+
+codi/*.html
+
+*.html
+
 # User-specific files
 .Ruserdata
 
