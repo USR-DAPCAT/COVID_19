@@ -36,100 +36,21 @@ output:
 
 
 
-# 0. Estado:
-
-> Des / 2020
+# Estado:
 
 
-Eventos:
+#### Últimas actualizaciones:
 
-&check; Traducir al inglés los gáficos para el artículo a través del Conductor <br/>
+Julio /2021
 
+&check; Generar variable nova farmacs combinats  <br/>
+&check; Reclasificar DM2 / Tipus de diabetis, i G_DIABETIC en funció de Antecedents, fàrmacs ADO i Hba1c  <br/>
+&check; Refer descriptiva + models <br/>
+&check; Separa analisis en 2 poblacions: 1. Global i 2 DM2 versus Pob no DM; <br/>
 
+- Pendinte: 
 
-> Nov / 2020
-
-
-Eventos:
-
-&check; Hacer Modelos con interacciones y recalcular modelos con orden de variables <br/>
-&check; Añadir complicaciones neurológicas <br/>
-&check; Tabla estratificado por sexo para pacientes no diabéticos <br/>
-&check; Quitar los fármacos de los modelos <br/>
-&check; Arreglar la tabla de laboratorio añadiendo [stringsAsFactors=F] <br/>
-&check; Las curvas spline con los nuevos datos <br/>
-&check; Añadidos modelos no paramétricos para estudiar efecto no lineal  <br/>
-&check; Graficar Splines de glucosa de modelos finales <br/>
-
-
-
-**Últimas actualizaciones** 
-
-**Realizado**
-
-> Mayo/Junio/2021
-
-&check; Estudiar la primera ola, a partir de la ultima base de datos Julio.2020  <br/>
-
-
-> Febrero/2021
-
-&check; Mejora de los modelos no paramétricos con término spline(Glucosa)  <br/>
-
-> Setiembre/2020
-
-&check; Ampliar tablas descriptivas P25, Median , P75 etc.. <br/>
-&check; Cálculo de nuevas variable IFCC HBA1C, agrupador Comp_cardiovascular <br/>
-&check; Calcular y añadir p valores en tabla 2 <br/>
-&check; Actualizaciones modelos de mortalidad modelo definitivo <br/>
-&check; actualizaciones nuevos modelos de Ventilación Mecánica y/o mortalidad <br/>
-&check; Modelos por subgrupos <br/>
-&check; Forest plot de modelos <br/>
-
-
-> Agost/2020
-
-&check; Nuevos modelos de mortalidad  <br/>
-&check; Nuevos modelos de Ventilación Mecánica y/o mortalidad <br/>
-&check; Comprobar valores de máximos de glucosa basal. <br/>
-
-> Agost/2020
-
-&check; Revisar código (Split script & Review)  <br/>
-&check; Canvi de criteri de DM a: HB>=6.5 y/o Glucemia >=200 <br/>
-&check; Generar tabla plana <br/>
-&check; Nuevos modelos de mortalidad <br/>
-&check; Nuevos modelos de ingreso en UCI <br/>
-
-> Juliol/2020
-
-&check; FLOW CHARTS Criterios de Inclusión y Descriptiva GENERAL.Ingresos , Urgencías <br/>
-&check; Descriptiva Problemas de salud <br/>
-&check; Descriptiva Constantes Vitales <br/>
-&check; Descriptiva Laboratorio <br/>
-&check; Descriptiva Mediacmentos <br/>
-&check; Descriptiva EVENTOS <br/>
-&check; Modelos de Mortalidad <br/>
-
->
-
-&check; Lectura / importación de archivos  <br/>
-&check; Generación de conductors   <br/>
-&check; Revisión de códigos  <br/>
-&check; Agregación de datos segun protocolo <br/>
-&check; Cálculo de varibles y recodificaciones <br/>
-&check; Descriptiva exploratoria <br/>
-&check; FLOW CHARTS Criterios de Inclusión y Descriptiva GENERAL.Ingresos , Urgencías <br/>
-&check; Descriptiva Problemas de salud <br/>
-&check; Descriptiva Constantes Vitales <br/>
-&check; Descriptiva Laboratorio <br/>
-&check; Descriptiva Mediacmentos <br/>
-&check; Descriptiva EVENTOS <br/>
-&check; Modelos de Moeratlidad <br/>
-
-**Pendent**
-
-* Revisión y depuración d'errors 
+Revisión y depuración 
 
 # Análisis
 
@@ -179,40 +100,6 @@ conductor_codis2<-here::here("codis_Covid_Agrupadores_juny.xlsx")
 # source(here::here("codi/criteris_exclusio_diagrama2.r"))
 
 
-# Llanço taula i camp que vull etiquetar i cambia nom del camp en funció d'etiqueta
-
-etiquetar_taula<-function(taula=resumtotal,camp="variable",taulavariables="variables_R.xls",camp_descripcio="descripcio2",idcamp="camp") {
-  
-  # taula=porca
-  # taulavariables=conductor
-  # camp="Parameter"
-  # camp_descripcio="desc_model"
-  # idcamp="camp2"
-
-  ####  Llegir etiquetes i variables a analitzar ####
-  variables <- read_conductor(taulavariables)
-  camp_sym<-sym(camp)
-  idcamp_sym<-sym(camp_sym)
-
-  # Canviar nom de camp de variables al de la taula 
-  # colnames(variables)[colnames(variables)=="camp"] <- camp
-  colnames(variables)[colnames(variables)==idcamp] <- camp
-
-  # Canviar arguments per ser evaluats
-  camp_eval<-sym(camp)
-  camp_descripcio_eval<-sym(camp_descripcio)
-  # Canviar el format de la taula 
-  taula %>% left_join(dplyr::select(variables,c(!!camp_eval,camp_descripcio)),by=quo_name(camp_eval)) %>% 
-    rename(descripcio=!!camp_descripcio) %>% 
-    mutate(!!camp_eval:=descripcio) %>% 
-    dplyr::select(-descripcio)
- 
-}
-
-# Cambia nom dels elements d'un vector 
-
-
-
 ```
 
 
@@ -223,150 +110,280 @@ etiquetar_taula<-function(taula=resumtotal,camp="variable",taulavariables="varia
 load(here::here("COVID2c.Rdata"))
 
 
-
-
-
 ```
 
 
-## 4.Descriptivo general
-
 
 ```{r preparacio, include=T}
-#dubtes Bogdan!!!
-
-#table(TAULA_PLANA_exc$FX.ADO)
-
-#table(TAULA_PLANA_exc$DM2)
-#table(TAULA_PLANA_exc$DG.CKD)
-
-#table(TAULA_PLANA_exc$DM2,TAULA_PLANA_exc$DG.CKD)
-
-table(TAULA_PLANA_exc$DM2,TAULA_PLANA_exc$DG.CKD,dnn = c("DM2","CKD"))
-
-chisq.test(TAULA_PLANA_exc$DM2,TAULA_PLANA_exc$DG.CKD)
-
-#table(TAULA_PLANA_exc$DM2,TAULA_PLANA_exc$DG.CKD,dnn=(a,b))
-#              DG.CKD
-#            No             Yes
-#     No  1824(0.845)       99(0.664)
-#DM2  Yes  335(0.155)       50(0.336)***************NO POT SER!!!
-#
-########
 
 TAULA_PLANA_exc<-TAULA_PLANA_exc%>%mutate(FX.STATINS2=ifelse(FX.STATINS=="Yes" ,"Si","No"))
 TAULA_PLANA_exc<-TAULA_PLANA_exc%>%mutate(FX.ARB_ACEI=ifelse( (FX.ARB=="Yes" | FX.ACEI=="Yes") ,"Si","No"))
 TAULA_PLANA_exc<-TAULA_PLANA_exc%>%mutate(FX.ARB_ACEI_STATINS=ifelse( (FX.ARB=="Yes" | FX.ACEI=="Yes") & (FX.STATINS=="Yes") ,"Si","No"))
 TAULA_PLANA_exc<-TAULA_PLANA_exc%>%mutate(FX.NO_ARB_ACEI_STATINS=ifelse( FX.ARB=="No" & FX.ACEI=="No" & FX.STATINS=="No" ,"Si","No"))
-#
-#dt_temp<-TAULA_PLANA_exc%>%select(PATIENT.ID,FX.ARB,FX.ACEI,FX.STATINS,FX.STATINS2,FX.ARB_ACEI,FX.ARB_ACEI_STATINS,FX.NO_ARB_ACEI_STATINS)
+
+
 ```
 
-## Analisis de fármacos ACEI/ARB / Statines
+```{r, include=TRUE}
 
-### Generar un grupo de farmacos excluyentes
+TAULA_PLANA_exc<-TAULA_PLANA_exc %>% etiquetar(taulavariables=conductor,camp_descripcio="descripcio2")
 
-```{r}
-
-read_conductor(conductor_codis2) %>% filter(agr%in%c("ACEI","STATINS","ARB")) %>% select(cod,agr) %>% kable(caption = "Codigos incluidos por fàrmaco") %>% kableExtra::kable_styling()
+```
 
 
-# Descriptiva de farmacs individuals
-descrTable(~ FX.ACEI + FX.STATINS + FX.ARB , data= TAULA_PLANA_exc) %>% export2md()
+## Analisis exploratori
 
-# Generar combinacions
-# Descriptiva de combiacions de Farmacs
+### Generar grup de fármacs excluyents i verificació 
 
+```{r, include=TRUE}
 vars_fx<-c("FX.ACEI","FX.STATINS","FX.ARB")
 TAULA_PLANA_exc<- TAULA_PLANA_exc %>% tidyr::unite(FX.ACEI_STATINS_ARB,vars_fx,sep="_",remove = F) 
 
 
-descrTable(~ FX.ACEI + FX.STATINS + FX.ARB+ FX.ACEI_STATINS_ARB , data= TAULA_PLANA_exc) %>% export2md()
-
 # Capturar variable combinada d'aquests farmacs excloents
 popa<-read_conductor(conductor,sheet="COMBI_FARMACOS") %>% select(FX.ACEI_STATINS_ARB,FX.COMBI)
 
-#
 TAULA_PLANA_exc<-TAULA_PLANA_exc %>% 
   left_join(popa,by="FX.ACEI_STATINS_ARB")
-
-descrTable(~ FX.ACEI + FX.STATINS + FX.ARB+ FX.ACEI_STATINS_ARB + FX.COMBI, data= TAULA_PLANA_exc, method = 3) %>% export2md()
-
-# etiquetar 
+# Etiquetar valors
 TAULA_PLANA_exc<-TAULA_PLANA_exc %>% etiquetar_valors(variables_factors = conductor,fulla = "COMBI_FARMACOS",camp_etiqueta = "Descripcio")
 
-descrTable(~ FX.ACEI + FX.STATINS + FX.ARB+ FX.ACEI_STATINS_ARB + FX.COMBI, data= TAULA_PLANA_exc, method = 3) %>% export2md()
+# Taula de verificació
+descrTable(FX.COMBI ~ FX.ACEI + FX.STATINS + FX.ARB+ FX.ACEI_STATINS_ARB + FX.ARB_ACEI, data= TAULA_PLANA_exc, method = 3, show.p.overall = F) %>% export2md()
 
 
+rm(popa)
+
+```
+
+
+### Reclasificació de Diabetis tipus 2, tipus 1 i altres i verificació de classificació 
+
+```{r, include=TRUE}
+
+# Recalcular DM2 en funció de Diagnostic, tractament ADO o basal_HBA1C>=6.5  SENSE QUE SIGUI DM1
+# GRUP_DM2 ---> DG.DM2, | FX.ADO | basal_HBA1C>=6.5 
+
+TAULA_PLANA_exc<-TAULA_PLANA_exc %>% mutate (GRUP_DM2=case_when(
+                                                  DG.DM1=="No" & (DG.DM2=="Yes" | FX.ADO=="Yes") ~ "Yes",
+                                                  DG.DM1=="No" & basal_pacient_valor_HBA1C_>=6.5 ~ "Yes",
+                                                  TRUE ~ "No") ) 
+# Reclassificar tipus de diabetis 
+TAULA_PLANA_exc<-
+  TAULA_PLANA_exc %>% mutate(GRUP_DIABETIC_CAT2=case_when(GRUP_DM2=="Yes"~ "2.DM2",
+                                                        DG.DM1=="Yes"~"1.DM1",
+                                                        DG.DM_SEC=="Yes" & GRUP_DM2=="No" & DG.DM1=="No" ~"3.Others DM",
+                                                        TRUE ~ "0.No Diabetes")) 
+
+# Reclassificar variable G_DIABETIC 
+TAULA_PLANA_exc<-TAULA_PLANA_exc %>% mutate(G_DIABETIC=if_else(GRUP_DIABETIC_CAT2=="0.No Diabetes","No","Yes"))
+
+# Verificar tema 
+descrTable(GRUP_DM2~DG.DM2+ FX.ADO + DG.DM1 + basal_pacient_valor_HBA1C_,
+           data=TAULA_PLANA_exc, 
+           method = 2, Q1=0,Q3=1,
+           show.p.overall = F, show.n = T) %>% export2md()
+
+
+# Verificar tema 
+descrTable(G_DIABETIC ~ GRUP_DM2+ FX.ADO + DG.DM1 + basal_pacient_valor_HBA1C_,
+           data=TAULA_PLANA_exc, 
+           method = 2, Q1=0,Q3=1,
+           show.p.overall = F, show.n = T) %>% export2md()
+
+# Verificar tema 
+descrTable(G_DIABETIC ~ GRUP_DIABETIC_CAT2,
+           data=TAULA_PLANA_exc, 
+           method = 2, Q1=0,Q3=1,
+           show.p.overall = F, show.n = T) %>% export2md()
 
 
 ```
 
 
+# 1. Descriptiva general i per convinació de fàrmacs
+
+## 1.2. Descriptiva general  i per convinació de farmacs població total (n=2308)
+
+
+
 ```{r, include=TRUE}
-formula<-formula.text("Taula00C",y="FX.COMBI",taulavariables = conductor,dt=TAULA_PLANA_exc)
+
+# Filtre: només pacients DM2 i població control sense cap tipus de DM (DM1 ni altres tipus)
+dades<-TAULA_PLANA_exc 
+
+
+formula<-formula.text("Taula00C",y="FX.COMBI",taulavariables = conductor,dt=dades)
 
 descrTable(formula,method =1,
-           data=TAULA_PLANA_exc,
+           data=dades,
            max.xlev = 100, 
            show.p.overall=FALSE,
            show.n = T,
            hide.no="No",
-           simplify=F) %>% 
+           simplify=F,show.all = T) %>% 
   export2md(caption="Características de las personas incluidas en el conjunto de datos Covid-19 en la OLA 1: data 01.01.2020 – 30.06.2020. Por combinaciones de Farmacos ACE / ARB / Statins")
 #
 
 
 ```
 
+## 1.2. Població DM + Exclosos subjectes amb DM1 i altres tipus de DM  (N=2122): 
 
-## Analisis de DM global (DM1 , DM2)
+Población DM2 + población sense DM (N=2122)
 
 ```{r, include=TRUE}
 
-
-read_conductor(conductor_codis2) %>% filter(agr%in%c("DM2","DM1","DM","DM_SEC", "ADO") | agr2=="DM") %>% 
-  select(domini,cod,agr,agr2) %>% kable(caption = "Codigos incluidos para DM") %>% kableExtra::kable_styling()
-
-
-TAULA_PLANA_exc %>% 
-  select(GRUP_DIABETIC_CAT,GRUP_DIABETIC_CAT2,G_DIABETIC,GRUP_DM2,DG.DM1,DG.DM2,DG.DM_SEC,DG2.DM,FX.ADO,DG.IRC,DG.CKD,DG2.Diabetic_retinopathy
-,DG2.Diabetic_kidney_disease, DG2.MICRO)
+# Filtre: només pacients DM2 i població control sense cap tipus de DM (DM1 ni altres tipus)
+dades<-TAULA_PLANA_exc %>% filter(GRUP_DM2=="Yes" | G_DIABETIC=="No")
 
 
+formula<-formula.text("Taula00C",y="FX.COMBI",taulavariables = conductor,dt=dades)
+
+descrTable(formula,method =1,
+           data=dades,
+           max.xlev = 100, 
+           show.p.overall=FALSE,
+           show.n = T,
+           hide.no="No",
+           simplify=F,show.all = T) %>% 
+  export2md(caption="Características de las personas incluidas en el conjunto de datos Covid-19 en la OLA 1: data 01.01.2020 – 30.06.2020. Por combinaciones de Farmacos ACE / ARB / Statins")
 #
-descrTable(~ GRUP_DIABETIC_CAT + GRUP_DIABETIC_CAT2 +G_DIABETIC +GRUP_DM2 + DG.DM1 +DG.DM2 +DG.DM_SEC +DG2.DM +FX.ADO +DG.IRC +DG.CKD +DG2.Diabetic_retinopathy + DG2.Diabetic_kidney_disease ,data=TAULA_PLANA_exc)
+
+```
 
 
-descrTable(G_DIABETIC ~ basal_pacient_valor_HBA1C_ +
-             GRUP_DIABETIC_CAT + GRUP_DIABETIC_CAT2 +G_DIABETIC +GRUP_DM2 + DG.DM1 +DG.DM2 +DG.DM_SEC +DG2.DM +FX.ADO +DG.IRC +DG.CKD +DG2.Diabetic_retinopathy + DG2.Diabetic_kidney_disease , method = 2, Q1=0,Q3=1,data=TAULA_PLANA_exc, show.p.overall = F, show.n = T) %>% export2md()
+# 2. Analisis d'associació amb mortalitat 
 
+## 2.1. Estimación de OR crudos y ajustados mediante modelos de regressión logistica (n=2308)
 
+- Toda la población 
+- Evaluar DM versus no DM
 
-descrTable(Death2~G_DIABETIC+ GRUP_DIABETIC_CAT + DG.DM1 + DG.DM2 ,data=TAULA_PLANA_exc,show.ratio = T, byrow = T) %>% export2md()
+```{r, include=TRUE}
 
+# Filtre: només pacients DM2 i població control sense cap tipus de DM (DM1 ni altres tipus)
+dades<-TAULA_PLANA_exc 
 
+formu<-formula.text("ajuste13",a=c("GRUP_DM2","GRUP_DIABETIC_CAT2"), "Death2",taulavariables = conductor,dt=dades)
+descrTable(formu,data=dades,show.ratio = T, show.p.ratio = T,byrow = T) %>% export2md()
 
-c("ajuste13.2","ajuste14.2") %>% 
-  map(~formula.text(.x,"Death2",taulavariables = conductor,dt=TAULA_PLANA_exc))%>% 
-  map(~glm(.x,data = TAULA_PLANA_exc, family = "binomial")) %>% 
-  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M13", "M14"),
-                    title = "Mortality models",
-                    p.style = "numeric_stars")
-
-
-
-
-c("ajuste13","ajuste14") %>% 
-  map(~formula.text(.x,"Death2",taulavariables = conductor,dt=TAULA_PLANA_exc))%>% 
-  map(~glm(.x,data = TAULA_PLANA_exc, family = "binomial")) %>% 
-  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M13", "M14"),
-                    title = "Mortality models",
-                    p.style = "numeric_stars")
+model<-
+  formula.text("ajuste13",a="G_DIABETIC", "Death2",taulavariables = conductor,dt=dades) %>% 
+  glm(data = dades, family = "binomial")
+  
+model %>% sjPlot::tab_model(digits=3, show.intercept = F,
+                    title = "Mortality models (Modelo completo)",
+                                        p.style = "numeric_stars")
 
 
 
 ```
+
+
+## 2.2. Estimación de OR crudos y ajustados mediante modelos de regressión logistica (n=2122)
+
+- Población DM2 + sin ningun tipo de diabetis conocida e identificada (N= 2122)
+- Evaluar Diabetis tipo 2 versus población general
+
+```{r, include=TRUE}
+
+# Filtre: només pacients DM2 i població control sense cap tipus de DM (DM1 ni altres tipus)
+dades<-TAULA_PLANA_exc %>% filter(GRUP_DM2=="Yes" | G_DIABETIC=="No")
+
+formu<-formula.text("ajuste14",a=c("GRUP_DM2"), "Death2",taulavariables = conductor,dt=dades)
+descrTable(formu,data=dades,show.ratio = T, show.p.ratio = T,byrow = T) %>% export2md()
+
+
+model<-
+  formula.text("ajuste14",a="GRUP_DM2", "Death2",taulavariables = conductor,dt=dades) %>% 
+  glm(data = dades, family = "binomial")
+  
+model %>% sjPlot::tab_model(digits=3, show.intercept = F,
+                    title = "Mortality models (Modelo completo)",
+  
+                                      p.style = "numeric_stars")
+
+
+```
+
+# 3. Analisis d'associació amb event combinat mortalitat/ UCI
+
+## 3.1. Estimación de OR crudos y ajustados mediante modelos de regressión logistica (n=2308)
+
+- Toda la población 
+- Evaluar DM versus no DM
+
+```{r, include=TRUE}
+
+# Filtre: només pacients DM2 i població control sense cap tipus de DM (DM1 ni altres tipus)
+dades<-TAULA_PLANA_exc 
+
+formu<-formula.text("ajuste13",a=c("GRUP_DM2","GRUP_DIABETIC_CAT2","G_DIABETIC"), "Death_DG_Ad_UCI2",taulavariables = conductor,dt=dades)
+descrTable(formu,data=dades,show.ratio = T, show.p.ratio = T,byrow = T) %>% export2md()
+
+
+model<-
+  formula.text("ajuste13",a="G_DIABETIC", "Death_DG_Ad_UCI2",taulavariables = conductor,dt=dades) %>% 
+  glm(data = dades, family = "binomial")
+  
+model %>% sjPlot::tab_model(digits=3, show.intercept = F,
+                    title = "Death or AICU models (Modelo completo)",
+                                        p.style = "numeric_stars")
+
+
+
+```
+
+## 3.2. Estimación de OR crudos y ajustados mediante modelos de regressión logistica (n=2122)
+
+- Población DM2 + sin ningun tipo de diabetis conocida e identificada (N= 2122)
+- Evaluar Diabetis tipo 2 versus población general
+
+
+
+```{r, include=TRUE}
+
+# Filtre: només pacients DM2 i població control sense cap tipus de DM (DM1 ni altres tipus)
+dades<-TAULA_PLANA_exc %>% filter(GRUP_DM2=="Yes" | G_DIABETIC=="No")
+
+formu<-formula.text("ajuste14",a=c("GRUP_DM2"), "Death_DG_Ad_UCI2",taulavariables = conductor,dt=dades)
+descrTable(formu,data=dades,show.ratio = T, show.p.ratio = T,byrow = T) %>% export2md()
+
+
+model<-
+  formula.text("ajuste14",a="GRUP_DM2", "Death_DG_Ad_UCI2",taulavariables = conductor,dt=dades) %>% 
+  glm(data = dades, family = "binomial")
+  
+model %>% sjPlot::tab_model(digits=3, show.intercept = F,
+                    title = "Death or AICU model",
+  
+                                      p.style = "numeric_stars")
+
+
+```
+
+
+```{r, include=FALSE}
+
+c("ajuste13.2","ajuste14.2") %>% 
+  map(~formula.text(.x,"Death2",taulavariables = conductor,dt=dades))%>% 
+  map(~glm(.x,data = TAULA_PLANA_exc, family = "binomial")) %>% 
+  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M13", "M14"),
+                    title = "Mortality models",
+                    p.style = "numeric_stars")
+
+
+c("ajuste13","ajuste14") %>% 
+  map(~formula.text(.x,"Death2",taulavariables = conductor,dt=dades))%>% 
+  map(~glm(.x,data = dades, family = "binomial")) %>% 
+  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M13", "M14"),
+                    title = "Mortality models",
+                    p.style = "numeric_stars")
+
+```
+
+
 
 
 ```{r resultats1, include=F}
@@ -498,10 +515,13 @@ descrTable(formula_vi,method =1,
 
 ```
 
+
+
+
+```{r resultats2, include=F}
+
 ## 5.Modelos descriptivos
 
-
-```{r resultats2, include=T}
 #i) Death ~(Age.At.Admission)[1] +  (Sex)[2] +(Statin)[3]+(ACE-I)[4] +(Type.Of.Diabetes)[5]+(Microvascular)[6] +(Macrovascular)[7] +(Hypertension)[8]
 #ii) Death ~(Age.At.Admission)[1] +  (Sex)[2] +(Statin)[3]+(ACE-I)[4] +(Diabetes)[5]+(Microvascular)[6] +(Macrovascular)[7] +(Hypertension)[8]
 

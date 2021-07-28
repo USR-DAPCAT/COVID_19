@@ -1265,15 +1265,12 @@ dt_plana_DM_agr1<-agregar_problemes(select(dt_plana_covid56_gather2,idp,cod,dat)
                                     dt.agregadors=select(dt_cataleg2,cod,agr=agr5),
                                     finestra.dies=c(-Inf,Inf),prefix = "DM_P.") 
 
-
-
 #----------------------------------------------------------------------------#
 #dt_plana_DM_agr1
 #----------------------------------------------------------------------------#
 GRUP1<-dt_plana_covid56_gather2%>%inner_join(dt_plana_DM_agr1,by="idp")%>%select(idp,cod)
 GRUP1<-GRUP1%>%inner_join(CATAL,by="cod")
 #----------------------------------------------------------------------------#
-
 
 
 dt_plana_DM_agr1_E09<-agregar_problemes(select(dt_plana_covid56_gather2,idp,cod,dat),
@@ -1880,7 +1877,6 @@ dt_plana_DM_agr5b<-dt_plana_DM_agr5b%>%mutate(PATIENT.ID=idp)%>% select(-idp)
 
 ## 3. Fusió de dades
 ```{r fusio_taulaPlana}
-
 # left_join(dt_plana_covid5_6_agr3,by="PATIENT.ID")%>%
 
 ##-------------------------------------------------------------------------------------------------#
@@ -1914,19 +1910,21 @@ TAULA_PLANA<- dt_plana_covid1_agr%>%left_join(dt_plana_covid2_agr,by="PATIENT.ID
                                  left_join(dt_plana_DM_agr4b,by="PATIENT.ID")%>%
                                  left_join(dt_plana_DM_agr5b,by="PATIENT.ID")%>%
                                  left_join(dt_plana_covid5_6_agr4,by="PATIENT.ID")
-  
-  
-  # %>%
+```
 
 
+```{r filtre}
 #variable.names(TAULA_PLANA)
 
 TAULA_PLANA<-TAULA_PLANA%>%filter(year_ingres>2019)
 
 #TAULA_PLANA<-TAULA_PLANA%>%filter(year_ingres="577")
-TAULA_PLANA           <-TAULA_PLANA%>%arrange(PATIENT.ID)
+TAULA_PLANA  <-TAULA_PLANA%>%arrange(PATIENT.ID)
+
+```
 
 
+```{r recodes}
 ################################################################
 
 TAULA_PLANA<-TAULA_PLANA %>% mutate(
@@ -1935,20 +1933,7 @@ TAULA_PLANA<-TAULA_PLANA %>% mutate(
           DM2==1 ~ 2,
           G_DIABETIC==1 ~ 3,
           TRUE ~ 0
-     )
-)
-
-
-
-#TAULA_PLANA<-TAULA_PLANA %>% mutate(
-#     GRUP_DIABETIC_CAT2 = case_when(
-#          DM1==1 ~ 1,
-#          (DM2==1 | FX.ADO>=1) ~ 2,
-#          G_DIABETIC==1 ~ 3,
-#          TRUE ~ 0
-#     )
-#)
-
+     ))
 
 
 TAULA_PLANA<-TAULA_PLANA %>% mutate(
@@ -1957,8 +1942,7 @@ TAULA_PLANA<-TAULA_PLANA %>% mutate(
           (DM2==1 | FX.ADO=="20200520") ~ 2,
           G_DIABETIC==1 ~ 3,
           TRUE ~ 0
-     )
-)
+     ))
 
 
 TAULA_PLANA<-TAULA_PLANA %>% mutate(
@@ -1967,10 +1951,11 @@ TAULA_PLANA<-TAULA_PLANA %>% mutate(
           (DM2==1 | FX.ADO=="20200520") ~ 1,
           G_DIABETIC==1 ~ 0,
           TRUE ~ 0
-     )
-)
+     ))
 
 
+
+# TAULA_PLANA %>% filter(FX.ADO>0)%>% select(FX.ADO, DM1, DM2, G_DIABETIC)
 
 
 table(TAULA_PLANA$GRUP_DIABETIC_CAT)
@@ -1978,14 +1963,11 @@ table(TAULA_PLANA$GRUP_DIABETIC_CAT2)
 table(TAULA_PLANA$GRUP_DIABETIC_CAT3)
 
 
-################################################################
 
-#table(TAULA_PLANA$G_DIABETIC)
-#table(TAULA_PLANA$DM1)
-#table(TAULA_PLANA$DM2)
-#table(TAULA_PLANA$GRUP_DIABETIC_CAT)
+```
 
-################################################################
+
+```{r salvar_problemes}
 
 # mirar tots els problemes de Salut :[[20_07_2020]]########################################
 #i)
