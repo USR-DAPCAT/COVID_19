@@ -161,11 +161,13 @@ rm(popa)
 
 ```{r, include=TRUE}
 
+
+
 # Recalcular DM2 en funció de Diagnostic, tractament ADO o basal_HBA1C>=6.5  SENSE QUE SIGUI DM1
 # GRUP_DM2 ---> DG.DM2, | FX.ADO | basal_HBA1C>=6.5 
-
 TAULA_PLANA_exc<-TAULA_PLANA_exc %>% mutate (GRUP_DM2=case_when(
                                                   DG.DM1=="No" & (DG.DM2=="Yes" | FX.ADO=="Yes") ~ "Yes",
+                                                  DG.DM1=="Yes" & FX.ADO=="Yes" ~ "Yes",
                                                   DG.DM1=="No" & basal_pacient_valor_HBA1C_>=6.5 ~ "Yes",
                                                   TRUE ~ "No") ) 
 # Reclassificar tipus de diabetis 
@@ -174,6 +176,13 @@ TAULA_PLANA_exc<-
                                                         DG.DM1=="Yes"~"1.DM1",
                                                         DG.DM_SEC=="Yes" & GRUP_DM2=="No" & DG.DM1=="No" ~"3.Others DM",
                                                         TRUE ~ "0.No Diabetes")) 
+
+# Reclassificar altres tipus de DM en funció de GLUCOSA BASAL>=200 O qualsevol tipus de DM, INSULINAS
+TAULA_PLANA_exc<-TAULA_PLANA_exc %>% 
+  mutate(GRUP_DIABETIC_CAT2=case_when(GRUP_DIABETIC_CAT2=="0.No Diabetes" & 
+                                        (FX.INSULINAS_INTM=="Yes" | FX.INSULINAS_LENT=="Yes" | FX.INSULINAS_Rap=="Yes" | GLU_1>=200)  ~ "3.Others DM", 
+                                        TRUE ~ GRUP_DIABETIC_CAT2 ))
+
 
 # Reclassificar variable G_DIABETIC 
 TAULA_PLANA_exc<-TAULA_PLANA_exc %>% mutate(G_DIABETIC=if_else(GRUP_DIABETIC_CAT2=="0.No Diabetes","No","Yes"))
@@ -196,6 +205,17 @@ descrTable(G_DIABETIC ~ GRUP_DIABETIC_CAT2,
            data=TAULA_PLANA_exc, 
            method = 2, Q1=0,Q3=1,
            show.p.overall = F, show.n = T) %>% export2md()
+
+# Reclassificar altres DM en funció de GLUCOSA BASAL>=200 O qualsevol tipus de DM, INSULINAS
+descrTable(GRUP_DIABETIC_CAT2 ~ G_DIABETIC + FX.INSULINAS_INTM + FX.INSULINAS_LENT +FX.INSULINAS_Rap + FX.ADO + GLU_1 + basal_pacient_valor_HBA1C_,
+           data=TAULA_PLANA_exc, 
+           method = 2, Q1=0,Q3=1,
+           show.p.overall = F, show.n = T) %>% export2md()
+
+
+
+
+
 
 
 ```
@@ -364,7 +384,7 @@ model %>% sjPlot::tab_model(digits=3, show.intercept = F,
 ```
 
 
-```{r, include=FALSE}
+```{r, include=FALSE, eval=FALSE}
 
 c("ajuste13.2","ajuste14.2") %>% 
   map(~formula.text(.x,"Death2",taulavariables = conductor,dt=dades))%>% 
@@ -386,7 +406,7 @@ c("ajuste13","ajuste14") %>%
 
 
 
-```{r resultats1, include=F}
+```{r resultats1, include=F, eval=FALSE}
 #GRUP_DIABETIC_CAT2		Diabetes_Category	Diabetes_Category( DM2+ADO)
 
 #ia)
@@ -438,7 +458,7 @@ descrTable(formula_iv,method =1,
 ```
 
 
-```{r resultats1.2, include=F}
+```{r resultats1.2, include=F, eval=FALSE}
 
 TAULA_PLANA_exc_b<-TAULA_PLANA_exc%>%filter(GRUP_DIABETIC_CAT!="No Diabetes")
 
