@@ -303,6 +303,57 @@ model %>% sjPlot::tab_model(digits=3, show.intercept = F,
 ```
 
 
+## Modelo table 3 (Adjusted for type diabetes and CKD) but not other microvascular disease
+
+```{r, include=TRUE}
+# Models ajustats
+
+formu<-"Death2 ~ FX.STATINS + FX.ARB_ACEI + GRUP_DIABETIC_CAT2 + DG.CKD"
+model<-glm(formu,data = dades, family = "binomial") 
+
+model %>% sjPlot::tab_model(digits=3, show.intercept = F,
+                    title = "Mortality models",
+                                        p.style = "numeric_stars")
+
+
+formu<-"Death_DG_Ad_UCI2 ~ FX.STATINS + FX.ARB_ACEI + GRUP_DIABETIC_CAT2 + DG.CKD"
+model<-glm(formu,data = dades, family = "binomial") 
+
+model %>% sjPlot::tab_model(digits=3, show.intercept = F,
+                    title = "Death or AICU",
+                                        p.style = "numeric_stars")
+
+
+
+```
+
+## OPTION 1 results of stepwise multivariable analysis on subgroups with complete data for all variables just using death as the outcome
+
+- Model 1: Death ~ ACE-I + Statin + Age.At.Admission +  Sex  + Type.Of.Diabetes 
+ + MacrovascularD 
+- Model 2: Death ~ ACE-I + Statin + Age.At.Admission +  Sex  + Type.Of.Diabetes 
+MacrovascularD + Hypertension 
+- Model 3: Death ~ ACE-I + Statin + Age.At.Admission +  Sex  + Type.Of.Diabetes 
+MacrovascularD + Hypertension + CKD
+- Model 4 (UK only) Death ~ ACE-I + Statin + Age.At.Admission +  Sex  + Type.Of.Diabetes 
+MacrovascularD + Hypertension +  CKD Ethnic_group + MicrovascularD
+
+
+
+```{r, include=TRUE}
+
+
+c("model1","model2","model3") %>% 
+  map(~formula.text(.x,"Death2",a=c("FX.ARB_ACEI","FX.STATINS"),taulavariables = conductor,dt=dades))%>% 
+  map(~glm(.x,data = dades, family = "binomial")) %>% 
+  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M1", "M2","M3"),
+                    title = "Mortality models",
+                    p.style = "numeric_stars")
+
+
+```
+
+
 ## 2.2. Estimación de OR crudos y ajustados mediante modelos de regressión logistica (n=2122)
 
 - Población DM2 + sin ningun tipo de diabetis conocida e identificada (N= 2122)
