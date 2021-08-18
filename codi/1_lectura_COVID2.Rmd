@@ -45,6 +45,7 @@ params:
 
 # s'ha de fer igual que EpiPeuCat de'n Manel Estructura!
 
+#18.08.2021
 #27.11.2020#
 #18.09.2020#
 
