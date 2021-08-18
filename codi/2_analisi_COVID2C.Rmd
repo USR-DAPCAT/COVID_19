@@ -180,9 +180,18 @@ TAULA_PLANA_exc<-
 
 # Reclassificar altres tipus de DM en funció de GLUCOSA BASAL>=200 O qualsevol tipus de DM, INSULINAS
 TAULA_PLANA_exc<-TAULA_PLANA_exc %>% 
-  mutate(GRUP_DIABETIC_CAT2=case_when(GRUP_DIABETIC_CAT2=="0.No Diabetes" & 
-                                        (FX.INSULINAS_INTM=="Yes" | FX.INSULINAS_LENT=="Yes" | FX.INSULINAS_Rap=="Yes" | GLU_1>=200)  ~ "3.Others DM", 
+  mutate(GRUP_DIABETIC_CAT2=case_when(GRUP_DIABETIC_CAT2=="0.No Diabetes" 
+                                      & (FX.INSULINAS_INTM=="Yes" | FX.INSULINAS_LENT=="Yes" | FX.INSULINAS_Rap=="Yes" | GLU_1>=200)  ~ "3.Others DM", 
                                         TRUE ~ GRUP_DIABETIC_CAT2 ))
+
+
+#canviat 18.08.2021!!!
+
+TAULA_PLANA_exc<-TAULA_PLANA_exc %>% 
+  mutate(GRUP_DIABETIC_CAT2=case_when(GRUP_DIABETIC_CAT2=="1.DM1" ~ "2.DM2", 
+                                        TRUE ~ GRUP_DIABETIC_CAT2 ))
+
+
 
 
 # Reclassificar variable G_DIABETIC 

@@ -17,7 +17,7 @@ output:
   word_document: default
 
 params:
-  dir_dades_origen: "DADES/20_07_2020" #"../../DADES/COVID_19/20_07_2020"
+  dir_dades_origen: "../../DADES/COVID_19/20_07_2020" #"DADES/COVID_19/20_07_2020"
 ---
 
 &nbsp;
