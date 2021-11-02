@@ -55,7 +55,24 @@ Revisión y depuración
 # Análisis
 
 ```{r setup, include = FALSE}
-knitr::opts_chunk$set(echo = FALSE, message=FALSE, warning=FALSE, include=F,size="huge")
+knitr::opts_chunk$set(
+	echo = FALSE,
+	message = FALSE,
+	warning = FALSE,
+	include = F,
+	size = "huge"
+)
+######################################################################################################################################################################
+#Hola Ray,
+#Nos piden un par de aclaraciones respecto el estudio de covid19 IECA/ARA+ Statins,
+#Ray, ellos solo tienen la cohorte de pacientes con DM2 y DM1, tenemos que excluir los otros pacientes o sea, 2308-406=1902, 
+#los 1902 pacientes se tienen que excluir de análisis. Por lo tanto hay que hacer un análisis solo con 406 pacientes, todo..distribución de fármacos mas los modelos
+#Nosotros no tenemos missings? Es correcto?
+######################################################################################################################################################################
+
+
+
+
 
 #include = FALSE prevents code and results from appearing in the finished file. R Markdown still runs the code in #the chunk, and the results can be used by other chunks.
 #echo = FALSE prevents code, but not the results from appearing in the finished file. This is a useful way to #embed figures.
@@ -189,14 +206,26 @@ TAULA_PLANA_exc<-TAULA_PLANA_exc %>%
 
 
 
-
-
-
-
-
-
 # Reclassificar variable G_DIABETIC 
 TAULA_PLANA_exc<-TAULA_PLANA_exc %>% mutate(G_DIABETIC=if_else(GRUP_DIABETIC_CAT2=="0.No Diabetes","No","Yes"))
+
+
+table(TAULA_PLANA_exc$GRUP_DIABETIC_CAT2)
+
+
+############################################################################################################################33
+############################################################################################################################33
+#[27.8.2021]#
+#TAULA_PLANA_exc<-TAULA_PLANA_exc%>% filter( GRUP_DIABETIC_CAT2=="1.DM1"  | GRUP_DIABETIC_CAT2=="2.DM2")
+############################################################################################################################33
+############################################################################################################################33
+############################################################################################################################33
+
+
+
+
+table(TAULA_PLANA_exc$GRUP_DIABETIC_CAT2)
+
 
 # Verificar tema 
 descrTable(GRUP_DM2~DG.DM2+ FX.ADO + DG.DM1 + basal_pacient_valor_HBA1C_,
@@ -222,9 +251,6 @@ descrTable(GRUP_DIABETIC_CAT2 ~ G_DIABETIC + FX.INSULINAS_INTM + FX.INSULINAS_LE
            data=TAULA_PLANA_exc, 
            method = 2, Q1=0,Q3=1,
            show.p.overall = F, show.n = T) %>% export2md()
-
-
-
 
 
 
@@ -259,14 +285,30 @@ descrTable(formula,method =1,
 
 ```
 
-## 1.2. Població DM + Exclosos subjectes amb DM1 i altres tipus de DM  (N=2132): 
 
-Población DM2 + población sense DM (N=2132)
+
+## 1.2b. Població DM2 +  subjectes amb DM1 i Exclosos altres tipus de DM  (N=2136): 
+
+Poblacio DM2+DM1 + poblacio sense altres DM (N=2136), a partir d'aqui DM1+DM2, van junts!!! 
 
 ```{r, include=TRUE}
 
-# Filtre: només pacients DM2 i població control sense cap tipus de DM (DM1 ni altres tipus)
-dades<-TAULA_PLANA_exc %>% filter(GRUP_DM2=="Yes" | G_DIABETIC=="No")
+
+#canviat 19.08.2021!!!
+
+
+
+TAULA_PLANA_exc<-TAULA_PLANA_exc %>% 
+  mutate(GRUP_DIABETIC_CAT2=case_when(GRUP_DIABETIC_CAT2=="1.DM1" ~ "2.DM2", TRUE ~ GRUP_DIABETIC_CAT2 ))
+
+
+TAULA_PLANA_exc<-TAULA_PLANA_exc %>% 
+  mutate(GRUP_DM2=case_when(GRUP_DIABETIC_CAT2=="2.DM2" ~ "Yes",TRUE ~ GRUP_DM2 ))
+
+table(TAULA_PLANA_exc$GRUP_DM2,TAULA_PLANA_exc$GRUP_DIABETIC_CAT2)
+# Filtre: només pacients DM2+DM1 i població control sense cap tipus de DM (ni altres tipus)
+
+dades<-TAULA_PLANA_exc %>% filter(GRUP_DIABETIC_CAT2=="0.No Diabetes" | GRUP_DIABETIC_CAT2=="2.DM2")
 
 
 formula<-formula.text("Taula00C",y="FX.COMBI",taulavariables = conductor,dt=dades)
@@ -281,24 +323,33 @@ descrTable(formula,method =1,
   export2md(caption="Características de las personas incluidas en el conjunto de datos Covid-19 en la OLA 1: data 01.01.2020 – 30.06.2020. Por combinaciones de Farmacos ACE / ARB / Statins")
 #
 
+
+
+
+
+
+
 ```
+
+
 
 
 # 2. Analisis d'associació amb mortalitat 
 
 ## 2.1. Estimación de OR crudos y ajustados mediante modelos de regressión logistica (n=2308)
 
-- Toda la población 
+- Tota la poblacio 
 - Evaluar DM versus no DM
 
 ## Odds Ratios no ajustados
 
 ```{r, include=TRUE}
-# Filtre: només pacients DM2 i població control sense cap tipus de DM (DM1 ni altres tipus)
+# Filtre: només pacients DM2+DM1 i població control sense cap tipus de DM (ni altres tipus)
 dades<-TAULA_PLANA_exc 
 
 formu<-formula.text("ajuste13",a=c("GRUP_DM2","GRUP_DIABETIC_CAT2"), "Death2",taulavariables = conductor,dt=dades)
 descrTable(formu,data=dades,show.ratio = T, show.p.ratio = T,byrow = T) %>% export2md()
+
 ```
 
 ## Modelo completo
@@ -362,17 +413,20 @@ c("model1","model2","model3") %>%
                     p.style = "numeric_stars")
 
 
+
+
+
 ```
 
 
-## 2.2. Estimación de OR crudos y ajustados mediante modelos de regressión logistica (n=2132)
+## 2.2. Estimación de OR crudos y ajustados mediante modelos de regressión logistica (n=2136)
 
-- Población DM2 + sin ningun tipo de diabetis conocida e identificada (N= 2132)
+- Poblacio DM2+DM1 + poblacio sense altres DM (N=2136)
 - Evaluar Diabetis tipo 2 versus población general
 
 ```{r, include=TRUE}
 
-# Filtre: només pacients DM2 i població control sense cap tipus de DM (DM1 ni altres tipus)
+# Filtre: només pacients DM2+DM1 i població control sense cap tipus de DM (ni altres tipus)
 dades<-TAULA_PLANA_exc %>% filter(GRUP_DM2=="Yes" | G_DIABETIC=="No")
 
 formu<-formula.text("ajuste14",a=c("GRUP_DM2"), "Death2",taulavariables = conductor,dt=dades)
@@ -446,12 +500,12 @@ c("model1","model2","model3") %>%
 
 ## 3.1. Estimación de OR crudos y ajustados mediante modelos de regressión logistica (n=2308)
 
-- Toda la población 
+- Tota la poblacio 
 - Evaluar DM versus no DM
 
 ```{r, include=TRUE}
 
-# Filtre: només pacients DM2 i població control sense cap tipus de DM (DM1 ni altres tipus)
+# Filtre: només pacients DM2+DM1 i població control sense cap tipus de DM (ni altres tipus)
 dades<-TAULA_PLANA_exc 
 
 formu<-formula.text("ajuste13",a=c("GRUP_DM2","GRUP_DIABETIC_CAT2","G_DIABETIC"), "Death_DG_Ad_UCI2",taulavariables = conductor,dt=dades)
@@ -470,10 +524,10 @@ model %>% sjPlot::tab_model(digits=3, show.intercept = F,
 
 ```
 
-## 3.2. Estimación de OR crudos y ajustados mediante modelos de regressión logistica (n=2132)
+## 3.2. Estimación de OR crudos y ajustados mediante modelos de regressión logistica (n=2136)
 
-- Población DM2 + sin ningun tipo de diabetis conocida e identificada (N= 2132)
-- Evaluar Diabetis tipo 2 versus población general
+- Poblacio DM2+DM1 + poblacio sense altres DM (N=2136)
+- Evaluar Diabetis tipo 2 versus poblacio general
 
 
 
@@ -685,12 +739,7 @@ descrTable(formula_vi,method =1,
 #                    p.style = "numeric_stars")
 
 
-c("ajuste13","ajuste14") %>% 
-  map(~formula.text(.x,"Death2",taulavariables = conductor,dt=TAULA_PLANA_exc))%>% 
-  map(~glm(.x,data = TAULA_PLANA_exc, family = "binomial")) %>% 
-  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M13", "M14"),
-                    title = "Mortality models",
-                    p.style = "numeric_stars")
+
 
 
 #Death_DG_Ad_UCI
@@ -704,6 +753,19 @@ c("ajuste13","ajuste14") %>%
 #                    p.style = "numeric_stars")
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 c("ajuste13","ajuste14") %>% 
   map(~formula.text(.x,"Death_DG_Ad_UCI2",taulavariables = conductor,dt=TAULA_PLANA_exc))%>% 
   map(~glm(.x,data = TAULA_PLANA_exc, family = "binomial")) %>% 
@@ -713,6 +775,13 @@ c("ajuste13","ajuste14") %>%
 
 
 
+
+c("ajuste13","ajuste14") %>% 
+  map(~formula.text(.x,"Death2",taulavariables = conductor,dt=TAULA_PLANA_exc))%>% 
+  map(~glm(.x,data = TAULA_PLANA_exc, family = "binomial")) %>% 
+  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("M13", "M14"),
+                    title = "Mortality models",
+                    p.style = "numeric_stars")
 
 
 ```

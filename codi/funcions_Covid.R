@@ -47,7 +47,7 @@ agregar_vars_covid<-function(dt=ANALITIQUES){
   print ("Reshaping")
   
   # RESHAPE valors d'Analitiques 
-  analitiques.valor <- paco %>% select(c("PATIENT.ID","cod","basal_valor")) %>% 
+  analitiques.valor <- paco %>%dplyr::select(c("PATIENT.ID","cod","basal_valor")) %>% 
     tidyr::spread(cod,basal_valor)
   colnames(analitiques.valor)[2:7] <- paste(colnames(analitiques.valor)[2:7], "basal", sep = "_")
   
@@ -146,7 +146,7 @@ agregar_vars_covid2<-function(dt=ANALITIQUES){
   print ("Reshaping")
   
   # RESHAPE valors d'Analitiques 
-  analitiques.valor <- paco %>% select(c("PATIENT.ID","cod","basal_pacient_valor")) %>% 
+  analitiques.valor <- paco %>% dplyr::select(c("PATIENT.ID","cod","basal_pacient_valor")) %>% 
     tidyr::spread(cod,basal_pacient_valor)
   colnames(analitiques.valor)[2:38] <- paste("basal_pacient_valor",colnames(analitiques.valor)[2:38], sep = "_")
   
