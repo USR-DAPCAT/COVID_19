@@ -1194,6 +1194,8 @@ library(lmtest)
 library(ResourceSelection) 
 library("kableExtra")
 
+
+
 #https://rcompanion.org/rcompanion/e_06.html
 
 ajuste_A<-c("ajuste1","ajuste2","ajuste3") %>% 
@@ -1706,8 +1708,19 @@ formu<-
 mod.gam.spline<-
   mgcv::gam(as.formula(formu), data = TAULA_PLANA_exc, family=binomial("logit"))
 
-mod.gam.spline %>% 
-  sjPlot::tab_model(digits=3, show.intercept = F,title = "Mortality model with glucose spline term", p.style = "numeric_stars")
+
+summary(mod.gam.spline)
+ 
+
+
+#mod.gam.spline %>% 
+#  sjPlot::tab_model(digits=2, show.intercept = F,title = "Mortality model with glucose spline term", p.style = "numeric_stars")
+
+
+#mod.gam.spline %>% 
+#  sjPlot::tab_model()
+
+
 
 ############################## ############################## ##############################
 #https://www.cienciadedatos.net/documentos/32_metodos_de_regresion_no_lineal_polinomica_splines_gams
@@ -1752,8 +1765,11 @@ mod.gam.spline<-
   mgcv::gam(as.formula(formu), data = TAULA_PLANA_exc, family=binomial("logit"))
 
 #Mortality model with Glucose spline term
-mod.gam.spline %>% 
-  sjPlot::tab_model(digits=3, show.intercept = F,title = "Mortality or Invasive mechanical ventilation  model with glucose spline term", p.style = "numeric_stars")
+#mod.gam.spline %>% 
+#  sjPlot::tab_model(digits=3, show.intercept = F,title = "Mortality or Invasive mechanical ventilation  model with glucose spline term", p.style = "numeric_stars")
+
+summary(mod.gam.spline)
+
 
 mgcViz::getViz(mod.gam.spline) %>% 
   plot.gamViz() +

@@ -62,6 +62,18 @@ October / 2021
 &check; Model3:Death/ ICU admission :ICU admission  ~ Macrovascular disease + Age + Sex + Ethnic group + Type of Diabetes + BMI + Hypertension + Dyslipidaemia  + Microvascular disease <br/>
 
 
+November / 2021
+
+&check; Model4:Death ~ Macrovascular disease + Age + Sex + FX.COMBI(ACEi/ARB_only  Statin_only  Both_ACEi/ARB_and_Statin  Neiher_ACEI/ARB/Statin(basal)) <br/>
+&check; Model5:Death ~ Macrovascular disease + Age + Sex + FX.COMBI+HTA <br/>
+&check; Model6:Death ~ Macrovascular disease + Age + Sex + FX.COMBI+HTA+CKD <br/>
+
+
+    
+      
+  
+
+
 - Pending: 
 
 Review and debugging
@@ -191,7 +203,8 @@ TAULA_PLANA_exc<-TAULA_PLANA_exc %>%
 TAULA_PLANA_exc<-TAULA_PLANA_exc %>% etiquetar_valors(variables_factors = conductor,fulla = "COMBI_FARMACOS",camp_etiqueta = "Descripcio")
 
 # Taula de verificació
-#descrTable(FX.COMBI ~ FX.ACEI + FX.STATINS + FX.ARB+ FX.ACEI_STATINS_ARB + FX.ARB_ACEI, data= TAULA_PLANA_exc, method = 3, show.p.overall = F) %>% export2md()
+descrTable(FX.COMBI ~ FX.ACEI + FX.STATINS + FX.ARB+ FX.ACEI_STATINS_ARB + FX.ARB_ACEI, data= TAULA_PLANA_exc, method = 3, show.p.overall = F) %>% export2md()
+
 
 
 rm(popa)
@@ -342,8 +355,12 @@ descrTable(formula4b,method =1,
 
 >  Model1:Death ~ Macrovascular disease (unadjusted),     
    Model2:Death ~ Macrovascular disease + Age + Sex,     
-   Model3:Death ~ Macrovascular disease + Age + Sex + Ethnic group + Type of Diabetes + BMI + Hypertension + Dyslipidaemia  + Microvascular disease 
+   Model3:Death ~ Macrovascular disease + Age + Sex + Ethnic group + Type of Diabetes + BMI + Hypertension + Dyslipidaemia  + Microvascular disease
 
+>  Model4:Death ~ Macrovascular disease + Age + Sex + FX.COMBI(ACEi/ARB_only  Statin_only  Both_ACEi/ARB_and_Statin  Neiher_ACEI/ARB/Statin(basal)),     
+   Model5:Death ~ Macrovascular disease + Age + Sex + FX.COMBI+HTA,    
+   Model6:Death ~ Macrovascular disease + Age + Sex + FX.COMBI+HTA+CKD
+   
 ```{r res1,include=TRUE, warning=F}
 
 
@@ -389,7 +406,7 @@ print("New Macrovascular complications  Models ")
 c("ajuste15b1","ajuste15b2","ajuste15b4") %>% 
   map(~formula.text(.x,"Death2",taulavariables = conductor,dt=dades))%>% 
   map(~glm(.x,data = dades, family = "binomial")) %>% 
-  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Mortality Models (unadjusted)", "Mortality Models (adjusted)","Mortality mMdels (adjusted)"),
+  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Mortality Models (unadjusted)", "Mortality Models (adjusted)","Mortality Models (adjusted)"),
                     title = "Mortality models",
                     p.style = "numeric_stars")
 
@@ -400,24 +417,11 @@ c("ajuste15b1","ajuste15b2","ajuste15b4") %>%
 c("ajuste16a","ajuste16b","ajuste16c") %>% 
   map(~formula.text(.x,"Death2",taulavariables = conductor,dt=dades))%>% 
   map(~glm(.x,data = dades, family = "binomial")) %>% 
-  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Mortality Models (unadjusted)", "Mortality Models (adjusted)","Mortality mMdels (adjusted)"),
+  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Mortality Models (adjusted)", "Mortality Models (adjusted)","Mortality Models (adjusted)"),
                     title = "Mortality models",
                     p.style = "numeric_stars")
 
 
-c("ajuste16d","ajuste16e","ajuste16f") %>% 
-  map(~formula.text(.x,"Death2",taulavariables = conductor,dt=dades))%>% 
-  map(~glm(.x,data = dades, family = "binomial")) %>% 
-  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Mortality Models (unadjusted)", "Mortality Models (adjusted)","Mortality mMdels (adjusted)"),
-                    title = "Mortality models",
-                    p.style = "numeric_stars")
-
-c("ajuste16g","ajuste16h","ajuste16i") %>% 
-  map(~formula.text(.x,"Death2",taulavariables = conductor,dt=dades))%>% 
-  map(~glm(.x,data = dades, family = "binomial")) %>% 
-  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Mortality Models (unadjusted)", "Mortality Models (adjusted)","Mortality mMdels (adjusted)"),
-                    title = "Mortality models",
-                    p.style = "numeric_stars")
 
 
 ```
