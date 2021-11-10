@@ -1,3 +1,30 @@
+
+
+
+#Table 2: Results of stepwise multivariable analysis 
+#for those with complete data for all variables using death as the outcome separated by country. 
+#(Model 4 was not completed for Spain due to lack of ethnicity data.)
+#
+
+
+#[*]#
+#ACEi/ARB only 
+#Statin only 
+#Both ACEi/ARB and Statin
+
+
+
+#1-->[*]+Age + gender + diabetes type + macrovascular disease
+#2-->[*]+Model 1 + Hypertension
+#3-->[*]+Model 2 + CKD
+#4-->[*]+Model 3 + ethnicity
+
+
+
+
+
+
+
 ########################################################################################
 #
 #25.10.2021

@@ -393,8 +393,31 @@ c("ajuste15b1","ajuste15b2","ajuste15b4") %>%
                     title = "Mortality models",
                     p.style = "numeric_stars")
 
+##############
+#[10.11.2021]#
+##############
+
+c("ajuste16a","ajuste16b","ajuste16c") %>% 
+  map(~formula.text(.x,"Death2",taulavariables = conductor,dt=dades))%>% 
+  map(~glm(.x,data = dades, family = "binomial")) %>% 
+  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Mortality Models (unadjusted)", "Mortality Models (adjusted)","Mortality mMdels (adjusted)"),
+                    title = "Mortality models",
+                    p.style = "numeric_stars")
 
 
+c("ajuste16d","ajuste16e","ajuste16f") %>% 
+  map(~formula.text(.x,"Death2",taulavariables = conductor,dt=dades))%>% 
+  map(~glm(.x,data = dades, family = "binomial")) %>% 
+  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Mortality Models (unadjusted)", "Mortality Models (adjusted)","Mortality mMdels (adjusted)"),
+                    title = "Mortality models",
+                    p.style = "numeric_stars")
+
+c("ajuste16g","ajuste16h","ajuste16i") %>% 
+  map(~formula.text(.x,"Death2",taulavariables = conductor,dt=dades))%>% 
+  map(~glm(.x,data = dades, family = "binomial")) %>% 
+  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Mortality Models (unadjusted)", "Mortality Models (adjusted)","Mortality mMdels (adjusted)"),
+                    title = "Mortality models",
+                    p.style = "numeric_stars")
 
 
 ```
