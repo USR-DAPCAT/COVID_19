@@ -1702,6 +1702,12 @@ kable_styling(bootstrap_options = "striped", font_size = 12)
 ### 3.6 Modelo no paramétricos con término spline(Glucosa) de mortalidad población total 
 
 ```{r resultats11, include=T, warning=F}
+
+#canviar de versió, quen tenim problemes!:
+
+#install_version("parameters", version = "0.14.0", repos = "http://cran.us.r-project.org")
+
+
 formu<-
   formula.text("ajuste8","Death2",a="s(max_pacient_valor_GLU_,k=5)",eliminar=c("max_pacient_valor_GLU_","G_DIABETIC"),taulavariables = conductor,dt=TAULA_PLANA_exc)
 
@@ -1711,16 +1717,15 @@ mod.gam.spline<-
 
 summary(mod.gam.spline)
  
+mod.gam.spline %>% 
+  sjPlot::tab_model(digits=2, show.intercept = F,title = "Mortality model with glucose spline term", p.style = "numeric_stars")
 
 
-#mod.gam.spline %>% 
-#  sjPlot::tab_model(digits=2, show.intercept = F,title = "Mortality model with glucose spline term", p.style = "numeric_stars")
 
 
-#mod.gam.spline %>% 
-#  sjPlot::tab_model()
+class(glm(mod.gam.spline))
 
-
+?extract_parameters_generic
 
 ############################## ############################## ##############################
 #https://www.cienciadedatos.net/documentos/32_metodos_de_regresion_no_lineal_polinomica_splines_gams
@@ -1765,8 +1770,9 @@ mod.gam.spline<-
   mgcv::gam(as.formula(formu), data = TAULA_PLANA_exc, family=binomial("logit"))
 
 #Mortality model with Glucose spline term
-#mod.gam.spline %>% 
-#  sjPlot::tab_model(digits=3, show.intercept = F,title = "Mortality or Invasive mechanical ventilation  model with glucose spline term", p.style = "numeric_stars")
+
+mod.gam.spline %>% 
+  sjPlot::tab_model(digits=3, show.intercept = F,title = "Mortality or Invasive mechanical ventilation  model with glucose spline term", p.style = "numeric_stars")
 
 summary(mod.gam.spline)
 
