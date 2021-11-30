@@ -68,6 +68,11 @@ November / 2021
 &check; Model5:Death ~ Macrovascular disease + Age + Sex + FX.COMBI+HTA <br/>
 &check; Model6:Death ~ Macrovascular disease + Age + Sex + FX.COMBI+HTA+CKD <br/>
 
+&check; Model7:Death ~ Macrovascular disease + Age + Sex + Hypertension + Microvascular disease  <br/>
+&check; Model8:ICU admission ~ Macrovascular disease + Age + Sex +Hypertension + Microvascular disease <br/>
+&check; Model9:Death/ ICU admission~ Macrovascular disease+ Age + Sex +Hypertension + Microvascular disease <br/>
+
+
 
     
       
@@ -360,9 +365,13 @@ descrTable(formula4b,method =1,
 >  Model4:Death ~ Macrovascular disease + Age + Sex + FX.COMBI(ACEi/ARB_only  Statin_only  Both_ACEi/ARB_and_Statin  Neiher_ACEI/ARB/Statin(basal)),     
    Model5:Death ~ Macrovascular disease + Age + Sex + FX.COMBI+HTA,    
    Model6:Death ~ Macrovascular disease + Age + Sex + FX.COMBI+HTA+CKD
+   Model7:Death ~ Macrovascular disease + Age + Sex + Hypertension + Microvascular disease
    
 ```{r res1,include=TRUE, warning=F}
 
+#Model7:Death ~ Macrovascular disease + Age + Sex + Hypertension + Microvascular disease  <br/>
+#Model8:ICU admission ~ Macrovascular disease + Age + Sex +Hypertension + Microvascular disease <br/>
+#Model9:Death/ ICU admission~ Macrovascular disease+ Age + Sex +Hypertension + Microvascular disease <br/>
 
 
 
@@ -411,13 +420,13 @@ c("ajuste15b1","ajuste15b2","ajuste15b4") %>%
                     p.style = "numeric_stars")
 
 ##############
-#[10.11.2021]#
+#[25.11.2021]#
 ##############
 
-c("ajuste16a","ajuste16b","ajuste16c") %>% 
+c("ajuste16a","ajuste16b","ajuste16c","ajuste16d") %>% 
   map(~formula.text(.x,"Death2",taulavariables = conductor,dt=dades))%>% 
   map(~glm(.x,data = dades, family = "binomial")) %>% 
-  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Mortality Models (adjusted)", "Mortality Models (adjusted)","Mortality Models (adjusted)"),
+  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Mortality Models (adjusted)", "Mortality Models (adjusted)","Mortality Models (adjusted)","Mortality Models (adjusted)"),
                     title = "Mortality models",
                     p.style = "numeric_stars")
 
@@ -431,7 +440,7 @@ c("ajuste16a","ajuste16b","ajuste16c") %>%
 > Model1:ICU admission  ~ Macrovascular disease (unadjusted),     
   Model2:ICU admission  ~ Macrovascular disease + Age + Sex,     
   Model3:ICU admission  ~ Macrovascular disease + Age + Sex + Ethnic group + Type of Diabetes + BMI + Hypertension + Dyslipidaemia  + Microvascular disease 
-
+  Model4:ICU admission  ~ Macrovascular disease + Age + Sex + Hypertension + Microvascular disease
 
 ```{r res2,include=TRUE, warning=F}
 
@@ -510,10 +519,10 @@ print("New Macrovascular complications  Models ")
 
 
 
-c("ajuste15b1","ajuste15b2","ajuste15b4") %>% 
+c("ajuste15b1","ajuste15b2","ajuste15b4","ajuste15b5") %>% 
   map(~formula.text(.x,"Ad_UCI2",taulavariables = conductor,dt=dades))%>% 
   map(~glm(.x,data = dades, family = "binomial")) %>% 
- sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("ICU admission Models (unadjusted)", "ICU admission Models (adjusted)","ICU admission models (adjusted)"),
+ sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("ICU admission Models (unadjusted)", "ICU admission Models (adjusted)","ICU admission models (adjusted)","ICU admission models (adjusted)"),
                     title = "ICU admission  models",
                     p.style = "numeric_stars")
 
@@ -608,6 +617,7 @@ c("ajuste15b1","ajuste15b2","ajuste15b4") %>%
 >  Model1:Death/ ICU admission   ~ Macrovascular disease (unadjusted),     
    Model2:Death/ ICU admission   ~ Macrovascular disease + Age + Sex,     
    Model3:Death/ ICU admission :ICU admission  ~ Macrovascular disease + Age + Sex + Ethnic group + Type of Diabetes + BMI + Hypertension + Dyslipidaemia  + Microvascular disease 
+   Model4:Death/ ICU admission  ~ Macrovascular disease + Age + Sex + Hypertension + Microvascular disease
 
 
 ```{r res4,include=TRUE, warning=F}
@@ -684,10 +694,10 @@ print("New Macrovascular complications  Models ")
 
 
 
-c("ajuste15b1","ajuste15b2","ajuste15b4") %>% 
+c("ajuste15b1","ajuste15b2","ajuste15b4","ajuste15b5") %>% 
   map(~formula.text(.x,"Death_DG_Ad_UCI2",taulavariables = conductor,dt=dades))%>% 
   map(~glm(.x,data = dades, family = "binomial")) %>% 
- sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Death/ICU admission  models (unadjusted)", "Death/ICU admission  models (adjusted)","Death/ICU admission  models (adjusted)"),
+ sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Death/ICU admission  models (unadjusted)", "Death/ICU admission  models (adjusted)","Death/ICU admission  models (adjusted)","Death/ICU admission  models (adjusted)"),
                     title = "Death/ICU admission  models",
                     p.style = "numeric_stars")
 
