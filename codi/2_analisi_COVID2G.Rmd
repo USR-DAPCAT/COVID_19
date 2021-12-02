@@ -17,6 +17,7 @@ output:
   pdf_document: default
   word_document: default
 
+bibliography: references.bib 
 ---
 
 &nbsp;
@@ -84,10 +85,23 @@ November / 2021
 Review and debugging
 
 
+```{r, eval=FALSE}
+
+knitr::write_bib(c("stats","parameters","sjPlot"),file="references.bib")
+
+
+citation("stats")
+citation("parameters")
+citation("sjPlot")
+
+```
+
+
 # Analysis
 
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(echo = FALSE, message=FALSE, warning=FALSE, include=F,size="huge")
+
 
 
 #Associations of macrovascular complications with death in patients with diabetes
@@ -138,6 +152,7 @@ library("sjPlot")
 library("sjmisc")
 library("sjlabelled")
 library("mgcViz")
+
 
 ##########
 #6.8.2020#
@@ -412,10 +427,11 @@ print("New Macrovascular complications  Models ")
 
 
 
+
 c("ajuste15b1","ajuste15b2","ajuste15b4") %>% 
   map(~formula.text(.x,"Death2",taulavariables = conductor,dt=dades))%>% 
   map(~glm(.x,data = dades, family = "binomial")) %>% 
-  sjPlot::tab_model(digits=3, 
+  sjPlot::tab_model(digits=5, 
                     show.intercept = F,
                     dv.labels = c("Mortality Models (unadjusted)", "Mortality Models (adjusted)","Mortality Models (adjusted)"),
                     show.se = TRUE,
@@ -435,6 +451,24 @@ c("ajuste16a","ajuste16b","ajuste16c","ajuste16d") %>%
                     p.style = "numeric_stars")
 
 
+
+
+#c("ajuste15b1") %>% 
+#  formula.text("Death2",taulavariables = conductor,dt=dades)%>% 
+#   glm(data = dades, family = "binomial") %>% 
+#  sjPlot::tab_model(digits=5, 
+#                    show.intercept = F,
+#                    dv.labels = c("Mortality Models (unadjusted)"),
+#                    show.se = TRUE,
+#                    title = "Mortality models",
+#                    p.style = "numeric_stars")
+
+
+#kk<-c("ajuste15b1") %>% formula.text("Death2",taulavariables = conductor,dt=dades)
+#m1<-glm(kk,data = dades,family = "binomial") 
+#Confint(m1)
+
+#confint.default(m1)
 
 
 ```
@@ -984,9 +1018,12 @@ readxl::read_excel(conductor_codis2,col_types = "text")%>%dplyr::select(cod,Desc
 ```
 
 
+# References
 
 
-```
+---
+nocite: '@*'
+...
 
 
 
