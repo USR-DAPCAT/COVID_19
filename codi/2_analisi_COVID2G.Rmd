@@ -464,11 +464,34 @@ c("ajuste16a","ajuste16b","ajuste16c","ajuste16d") %>%
 #                    p.style = "numeric_stars")
 
 
-#kk<-c("ajuste15b1") %>% formula.text("Death2",taulavariables = conductor,dt=dades)
-#m1<-glm(kk,data = dades,family = "binomial") 
-#Confint(m1)
+# si , ens ho pregnuten, ho farem a tot arreu!
 
-#confint.default(m1)
+kk<-c("ajuste15b1") %>% formula.text("Death2",taulavariables = conductor,dt=dades)
+m1<-glm(kk,data = dades,family = "binomial") 
+summary(m1)$coefficients[2,2]
+exp(confint.default(m1))
+
+
+
+
+#fisher scoring:
+#exp(confint(m1))
+
+#wald:
+#exp(confint.default(m1))
+
+#summary(m1)
+#confint(m1)
+
+#wald:
+#CI_lower <- exp(coefficients(m1)[2] - 1.96*summary(m1)$coefficients[2,2])
+#CI_upper <- exp(coefficients(m1)[2] + 1.96*summary(m1)$coefficients[2,2])
+
+#CI_lower
+#CI_upper1
+
+
+
 
 
 ```
