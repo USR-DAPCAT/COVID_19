@@ -425,60 +425,103 @@ print("New Macrovascular complications  Models ")
 
 #print("without Grup_diabetic_cat ")
 
+#vcov.type = c("HC3", "const", "HC", "HC0", "HC1", "HC2", "HC4", "HC4m", "HC5", "CR0",
+#    "CR1", "CR1p", "CR1S", "CR2", "CR3")
 
+
+#vcov.fun = "vcovHC" i vcov.type = "HC3"
 
 
 c("ajuste15b1","ajuste15b2","ajuste15b4") %>% 
   map(~formula.text(.x,"Death2",taulavariables = conductor,dt=dades))%>% 
   map(~glm(.x,data = dades, family = "binomial")) %>% 
   sjPlot::tab_model(digits=5, 
-                    show.intercept = F,
+                    show.intercept = TRUE,
                     dv.labels = c("Mortality Models (unadjusted)", "Mortality Models (adjusted)","Mortality Models (adjusted)"),
-                    show.se = TRUE,
+                    show.se = FALSE,
                     title = "Mortality models",
                     p.style = "numeric_stars")
+
+
+c("ajuste15b1","ajuste15b2","ajuste15b4") %>% 
+  map(~formula.text(.x,"Death2",taulavariables = conductor,dt=dades))%>% 
+  map(~summary(glm(.x,data = dades, family = "binomial")))  
+ 
+
+
+
+
 
 ##############
 #[25.11.2021]#
 ##############
 
+#Cluster-Robust Covariance Matrix Estimation (sandwich)
+#show.std = TRUE,
+
+
 c("ajuste16a","ajuste16b","ajuste16c","ajuste16d") %>% 
   map(~formula.text(.x,"Death2",taulavariables = conductor,dt=dades))%>% 
   map(~glm(.x,data = dades, family = "binomial")) %>% 
   sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Mortality Models (adjusted)", "Mortality Models (adjusted)","Mortality Models (adjusted)","Mortality Models (adjusted)"),
-                    show.se = TRUE,
+                    show.se = FALSE,
+                    vcov.fun = "HC",
                     title = "Mortality models",
                     p.style = "numeric_stars")
 
 
 
 
-#c("ajuste15b1") %>% 
-#  formula.text("Death2",taulavariables = conductor,dt=dades)%>% 
-#   glm(data = dades, family = "binomial") %>% 
-#  sjPlot::tab_model(digits=5, 
-#                    show.intercept = F,
-#                    dv.labels = c("Mortality Models (unadjusted)"),
-#                    show.se = TRUE,
-#                    title = "Mortality models",
-#                    p.style = "numeric_stars")
-
-
-# si , ens ho pregnuten, ho farem a tot arreu!
-
-kk<-c("ajuste15b1") %>% formula.text("Death2",taulavariables = conductor,dt=dades)
-m1<-glm(kk,data = dades,family = "binomial") 
-summary(m1)$coefficients[2,2]
-exp(confint.default(m1))
+c("ajuste16a","ajuste16b","ajuste16c","ajuste16d") %>% 
+  map(~formula.text(.x,"Death2",taulavariables = conductor,dt=dades))%>% 
+  map(~summary(glm(.x,data = dades, family = "binomial")))
 
 
 
+##Cluster-Robust Covariance Matrix Estimation (sandwich)
+#m1<-c("ajuste15b1") %>% formula.text("Death2",taulavariables = conductor,dt=dades)%>%glm(data = dades,family = "binomial") 
+#summary(m1)$coefficients[2,2]
+#exp(confint(m1))
+
+
+
+
+
+
+
+
+#CI_lower <- exp(coefficients(m1)[2] - 1.96*summary(m1)$coefficients[2,2])
+#CI_upper <- exp(coefficients(m1)[2] + 1.96*summary(m1)$coefficients[2,2])
+
+#CI_lower
+#CI_upper 
+
+
+
+
+#m2<-c("ajuste15b1") %>% formula.text("Death2",taulavariables = conductor,dt=dades)%>%glm(data = dades,family = "binomial") 
+#exp(confint.default(m2))
+
+
+
+
+
+
+#m1<-c("ajuste15b1") %>% formula.text("Death2",taulavariables = conductor,dt=dades)%>%glm(data = dades,family = "binomial") 
 
 #fisher scoring:
+#summary(m1)
+#summary(m1)$coefficients[2,2]
 #exp(confint(m1))
+
+
 
 #wald:
 #exp(confint.default(m1))
+
+
+
+
 
 #summary(m1)
 #confint(m1)
@@ -584,10 +627,15 @@ c("ajuste15b1","ajuste15b2","ajuste15b4","ajuste15b5") %>%
   map(~formula.text(.x,"Ad_UCI2",taulavariables = conductor,dt=dades))%>% 
   map(~glm(.x,data = dades, family = "binomial")) %>% 
  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("ICU admission Models (unadjusted)", "ICU admission Models (adjusted)","ICU admission models (adjusted)","ICU admission models (adjusted)"),
-                    show.se = TRUE,
+                    show.se = FALSE,
                     title = "ICU admission  models",
                     p.style = "numeric_stars")
 
+
+
+c("ajuste15b1","ajuste15b2","ajuste15b4","ajuste15b5") %>% 
+  map(~formula.text(.x,"Ad_UCI2",taulavariables = conductor,dt=dades))%>% 
+  map(~summary(glm(.x,data = dades, family = "binomial")) )
 
 
 
@@ -657,12 +705,16 @@ c("ajuste15b1","ajuste15b2","ajuste15b4") %>%
   map(~formula.text(.x,"EV1.Mechanical_ventialtion2",taulavariables = conductor,dt=dades))%>% 
   map(~glm(.x,data = dades, family = "binomial")) %>% 
  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Use of IMV on admission Models (unadjusted)", "Use of IMV on admission Models (adjusted)","Use of IMV on admission models (adjusted)"),
-                    show.se = TRUE,
+                    show.se = FALSE,
                     title = "ICU admission  models",
                     p.style = "numeric_stars")
 
 
 
+
+c("ajuste15b1","ajuste15b2","ajuste15b4") %>% 
+  map(~formula.text(.x,"EV1.Mechanical_ventialtion2",taulavariables = conductor,dt=dades))%>% 
+  map(~summary(glm(.x,data = dades, family = "binomial")) )
 
 
 
@@ -761,9 +813,17 @@ c("ajuste15b1","ajuste15b2","ajuste15b4","ajuste15b5") %>%
   map(~formula.text(.x,"Death_DG_Ad_UCI2",taulavariables = conductor,dt=dades))%>% 
   map(~glm(.x,data = dades, family = "binomial")) %>% 
  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Death/ICU admission  models (unadjusted)", "Death/ICU admission  models (adjusted)","Death/ICU admission  models (adjusted)","Death/ICU admission  models (adjusted)"),
-                    show.se = TRUE,
+                    show.se = FALSE,
                     title = "Death/ICU admission  models",
                     p.style = "numeric_stars")
+
+
+
+
+c("ajuste15b1","ajuste15b2","ajuste15b4","ajuste15b5") %>% 
+  map(~formula.text(.x,"Death_DG_Ad_UCI2",taulavariables = conductor,dt=dades))%>% 
+  map(~summary(glm(.x,data = dades, family = "binomial"))) 
+
 
 
 ```
@@ -849,11 +909,14 @@ c("ajuste15b1","ajuste15b2","ajuste15b4") %>%
   map(~formula.text(.x,"log_temps_hosp",taulavariables = conductor,dt=dades))%>% 
   map(~glm(.x,data = dades, family = "gaussian")) %>% 
    sjPlot::tab_model(digits=3, show.intercept = T,dv.labels = c("log(length-of-stay_hosp) models (unadjusted)", "log(length-of-stay_hosp)  models (adjusted)","log(length-of-stay_hosp) models (adjusted)"),
-                      show.se = TRUE,
+                      show.se = FALSE,
                     title = "Log(length-of-stay_hosp) models",
                     p.style = "numeric_stars")
 
 
+c("ajuste15b1","ajuste15b2","ajuste15b4") %>% 
+  map(~formula.text(.x,"log_temps_hosp",taulavariables = conductor,dt=dades))%>% 
+  map(~summary(glm(.x,data = dades, family = "gaussian"))) 
 
 
 
@@ -925,9 +988,15 @@ c("ajuste15b1","ajuste15b2","ajuste15b4") %>%
   map(~formula.text(.x,"temps_hosp",taulavariables = conductor,dt=dades))%>% 
   map(~glm(.x,data = dades, family = "poisson")) %>% 
    sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("length-of-stay_hosp models (unadjusted)", "length-of-stay_hosp models (adjusted)","length-of-stay_hosp models (adjusted)"),
-                      show.se = TRUE,
+                      show.se = FALSE,
                     title = "length-of-stay_hosp models.(Poisson)",
                     p.style = "numeric_stars")
+
+
+
+c("ajuste15b1","ajuste15b2","ajuste15b4") %>% 
+  map(~formula.text(.x,"temps_hosp",taulavariables = conductor,dt=dades))%>% 
+  map(~summary(glm(.x,data = dades, family = "poisson"))) 
 
 
 
@@ -989,9 +1058,11 @@ c("ajuste15b1","ajuste15b2","ajuste15b4") %>%
   map(~formula.text(.x,"temps_hosp",taulavariables = conductor,dt=dades))%>% 
   map(~ MASS::glm.nb(.x,data = dades)) %>% 
    sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("length-of-stay_hosp models (unadjusted)", "length-of-stay_hosp models (adjusted)","length-of-stay_hosp models (adjusted)"),
-                      show.se = TRUE,
+                      show.se = FALSE,
                     title = "length-of-stay_hosp models.(Negative Binomial)",
                     p.style = "numeric_stars")
+
+
 
 
 
