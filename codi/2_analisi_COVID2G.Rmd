@@ -414,24 +414,6 @@ descrTable(formula4b,method =1,
 print("New Macrovascular complications  Models ")
 
 
-
-#c("ajuste15b1","ajuste15b2","ajuste15b3") %>% 
-#  map(~formula.text(.x,"Death2",taulavariables = conductor,dt=dades))%>% 
-#  map(~glm(.x,data = dades, family = "binomial")) %>% 
-#  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Mortality Models (unadjusted)", "Mortality Models (adjusted)","Mortality models (adjusted)"),
-#                    title = "Mortality models",
-#                    p.style = "numeric_stars")
-
-
-#print("without Grup_diabetic_cat ")
-
-#vcov.type = c("HC3", "const", "HC", "HC0", "HC1", "HC2", "HC4", "HC4m", "HC5", "CR0",
-#    "CR1", "CR1p", "CR1S", "CR2", "CR3")
-
-
-#vcov.fun = "vcovHC" i vcov.type = "HC3"
-
-
 c("ajuste15b1","ajuste15b2","ajuste15b4") %>% 
   map(~formula.text(.x,"Death2",taulavariables = conductor,dt=dades))%>% 
   map(~glm(.x,data = dades, family = "binomial")) %>% 
@@ -443,11 +425,16 @@ c("ajuste15b1","ajuste15b2","ajuste15b4") %>%
                     p.style = "numeric_stars")
 
 
-c("ajuste15b1","ajuste15b2","ajuste15b4") %>% 
-  map(~formula.text(.x,"Death2",taulavariables = conductor,dt=dades))%>% 
-  map(~summary(glm(.x,data = dades, family = "binomial")))  
- 
 
+
+##Cluster-Robust Covariance Matrix Estimation (sandwich)
+m1<-c("ajuste15b1") %>% formula.text("Death2",taulavariables = conductor,dt=dades)%>%glm(data = dades,family = "binomial") 
+
+print("Standard Error Sandwich estimador")
+summary(m1)$coefficients[2,3]
+
+print("Confidence Interval Sandwich estimador")
+exp(confint(m1))
 
 
 
@@ -465,42 +452,9 @@ c("ajuste16a","ajuste16b","ajuste16c","ajuste16d") %>%
   map(~glm(.x,data = dades, family = "binomial")) %>% 
   sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Mortality Models (adjusted)", "Mortality Models (adjusted)","Mortality Models (adjusted)","Mortality Models (adjusted)"),
                     show.se = FALSE,
-                    vcov.fun = "HC",
                     title = "Mortality models",
                     p.style = "numeric_stars")
 
-
-
-
-c("ajuste16a","ajuste16b","ajuste16c","ajuste16d") %>% 
-  map(~formula.text(.x,"Death2",taulavariables = conductor,dt=dades))%>% 
-  map(~summary(glm(.x,data = dades, family = "binomial")))
-
-
-
-##Cluster-Robust Covariance Matrix Estimation (sandwich)
-#m1<-c("ajuste15b1") %>% formula.text("Death2",taulavariables = conductor,dt=dades)%>%glm(data = dades,family = "binomial") 
-#summary(m1)$coefficients[2,2]
-#exp(confint(m1))
-
-
-
-
-
-
-
-
-#CI_lower <- exp(coefficients(m1)[2] - 1.96*summary(m1)$coefficients[2,2])
-#CI_upper <- exp(coefficients(m1)[2] + 1.96*summary(m1)$coefficients[2,2])
-
-#CI_lower
-#CI_upper 
-
-
-
-
-#m2<-c("ajuste15b1") %>% formula.text("Death2",taulavariables = conductor,dt=dades)%>%glm(data = dades,family = "binomial") 
-#exp(confint.default(m2))
 
 
 
@@ -511,17 +465,11 @@ c("ajuste16a","ajuste16b","ajuste16c","ajuste16d") %>%
 
 #fisher scoring:
 #summary(m1)
-#summary(m1)$coefficients[2,2]
+#summary(m1)$coefficients[2,3]
 #exp(confint(m1))
-
-
 
 #wald:
 #exp(confint.default(m1))
-
-
-
-
 
 #summary(m1)
 #confint(m1)
@@ -532,6 +480,12 @@ c("ajuste16a","ajuste16b","ajuste16c","ajuste16d") %>%
 
 #CI_lower
 #CI_upper1
+
+
+
+
+
+
 
 
 
@@ -633,9 +587,6 @@ c("ajuste15b1","ajuste15b2","ajuste15b4","ajuste15b5") %>%
 
 
 
-c("ajuste15b1","ajuste15b2","ajuste15b4","ajuste15b5") %>% 
-  map(~formula.text(.x,"Ad_UCI2",taulavariables = conductor,dt=dades))%>% 
-  map(~summary(glm(.x,data = dades, family = "binomial")) )
 
 
 
@@ -708,14 +659,6 @@ c("ajuste15b1","ajuste15b2","ajuste15b4") %>%
                     show.se = FALSE,
                     title = "ICU admission  models",
                     p.style = "numeric_stars")
-
-
-
-
-c("ajuste15b1","ajuste15b2","ajuste15b4") %>% 
-  map(~formula.text(.x,"EV1.Mechanical_ventialtion2",taulavariables = conductor,dt=dades))%>% 
-  map(~summary(glm(.x,data = dades, family = "binomial")) )
-
 
 
 
@@ -820,11 +763,6 @@ c("ajuste15b1","ajuste15b2","ajuste15b4","ajuste15b5") %>%
 
 
 
-c("ajuste15b1","ajuste15b2","ajuste15b4","ajuste15b5") %>% 
-  map(~formula.text(.x,"Death_DG_Ad_UCI2",taulavariables = conductor,dt=dades))%>% 
-  map(~summary(glm(.x,data = dades, family = "binomial"))) 
-
-
 
 ```
 ## 2.5.  log(Length-of-stay_hosp) Multivariable analysis on subgroup with complete data for all variables.Estimation of crude and adjusted parameters using Lineal Regression models (DM1+DM2,n=406)
@@ -914,10 +852,6 @@ c("ajuste15b1","ajuste15b2","ajuste15b4") %>%
                     p.style = "numeric_stars")
 
 
-c("ajuste15b1","ajuste15b2","ajuste15b4") %>% 
-  map(~formula.text(.x,"log_temps_hosp",taulavariables = conductor,dt=dades))%>% 
-  map(~summary(glm(.x,data = dades, family = "gaussian"))) 
-
 
 
 ###############################################################################################
@@ -993,10 +927,6 @@ c("ajuste15b1","ajuste15b2","ajuste15b4") %>%
                     p.style = "numeric_stars")
 
 
-
-c("ajuste15b1","ajuste15b2","ajuste15b4") %>% 
-  map(~formula.text(.x,"temps_hosp",taulavariables = conductor,dt=dades))%>% 
-  map(~summary(glm(.x,data = dades, family = "poisson"))) 
 
 
 
