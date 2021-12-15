@@ -1,5 +1,5 @@
 
-# [10.12.2021]
+# [15.12.2021]
 
 
 #Hola Ray , para el estudio de Ieca covid nis piden calcular el error estándar para lo intervalos de confianza de OR, 
