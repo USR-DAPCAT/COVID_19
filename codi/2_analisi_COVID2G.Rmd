@@ -440,14 +440,18 @@ c("ajuste15b1","ajuste15b2","ajuste15b4") %>%
                     p.style = "numeric_stars")
 
 print("Summary Model 1 ")
-summary(m00)
+
 
 m00<-logistf(Death2 ~ DG.MACR,firth=FALSE,family=binomial,data = dades)
+summary(m00)
 
 print("Profile likelihood ratio estimator ,Model1:Mortality Models (unadjusted) ")
 plot(profile(m00,variable="DG.MACRYes", legends = TRUE))
 
 
+print("SE ,Model1:Mortality Models (unadjusted) ")
+m1<-c("ajuste15b1") %>% formula.text("Death2",taulavariables = conductor,dt=dades)%>%glm(data = dades,family = "binomial") 
+summary(m1)$coefficients[2,2]
 
 
 
@@ -565,8 +569,6 @@ plot(profile(m00,variable="DG.MACRYes", legends = TRUE))
  
  #for(i in 1:k){
 
-   
-   
  #mm <- glm(y/n~1,offset=b2[i]*log(bid),weights=n,family=binomial)
  #w[i] <- logLik(mm)
  #}
@@ -580,6 +582,11 @@ plot(profile(m00,variable="DG.MACRYes", legends = TRUE))
  #
  ##############################################################################
 
+ #per a un interval de confiança del 95% i el posa a la trama. El 95%
+ #L'interval de confiança de la probabilitat del perfil és el conjunt de punts
+ #on es troba la funció de logaritme del perfil
+ #per sobre del tall.
+ 
 
 ##############
 #[25.11.2021]#
@@ -617,11 +624,10 @@ c("ajuste16a","ajuste16b","ajuste16c","ajuste16d") %>%
 
 
 
-#m1<-c("ajuste15b1") %>% formula.text("Death2",taulavariables = conductor,dt=dades)%>%glm(data = dades,family = "binomial") 
 
 #fisher scoring:
 #summary(m1)
-#summary(m1)$coefficients[2,3]
+
 #exp(confint(m1))
 
 #wald:
