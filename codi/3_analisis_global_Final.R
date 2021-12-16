@@ -2,6 +2,30 @@
 # [15.12.2021]
 
 
+#Dear Didac,
+#That’s great as this simplifies the next steps.
+#When the results are produced by the glm function, 
+#the standard error output is on the log-scale and 
+#there are two different ways to calculate the 95%CI (this is an example: https://stats.idre.ucla.edu/r/dae/logit-regression/). It would be good to clarify with your team this further point.
+#Alternatively, if that’s is ok with you, 
+#is it possible to share the output of the results from R, 
+#with coefficients and standard errors as in summary(mylogit) in the above linked example?
+#Thanks again,
+#Francesco
+
+#Benvolgut Didac,
+#Això és genial, ja que això simplifica els passos següents.
+#Quan els resultats són produïts per la funció glm, 
+#la sortida d'error estàndard es troba a l'escala logarítmica 
+#i hi ha dues maneres diferents de calcular l'IC del 95% 
+#(aquest és un exemple: https://stats.idre.ucla.edu/). r/dae/logit-regression/).
+#Seria bo aclarir amb el vostre equip aquest punt més.
+#Alternativament, si us convé, 
+#és possible compartir la sortida dels resultats de R, 
+#a#mb coeficients i errors estàndard com es mostra en resum (mylogit) a l'exemple enllaçat anterior?
+  
+
+
 #Hola Ray , para el estudio de Ieca covid nis piden calcular el error estándar para lo intervalos de confianza de OR, 
 
 #Gracias
