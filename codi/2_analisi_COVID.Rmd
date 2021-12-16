@@ -455,7 +455,7 @@ TAULA_PLANA$agecat2<-ifelse(TAULA_PLANA$EDAD.AGE>=61,"2",TAULA_PLANA$agecat2)
 ## 1.Flow Chart
 
 ```{r flow_chart, include = TRUE,message = FALSE,warning = FALSE,echo = FALSE}
-#flow chartS : eps m'ha fallat!!! 
+#flow chartS : eps m'ha fallat!!! dplyr!
 
 
 criteris_exclusio_diagrama(dt=TAULA_PLANA,

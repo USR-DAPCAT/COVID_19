@@ -91,7 +91,7 @@ November / 2021
 &check; (MLE  ±  SE * (1-alpha)/2 percentile of Normal distribution). 
 
 &check; However, when using the Profile Likelihood Based Confidence Interval, 
-&check; two points on either side of MLE are chosen such that likelihood at those two points is equal to :
+&check; two points on either side of MLE are chosen such that likelihood at those two points is equal to
 &check; (maximum likelihood – ½ * (1-alpha) percentile of the chi-square distribution with DF 1).
 
 
@@ -429,6 +429,21 @@ library("logistf")
 print("New Macrovascular complications  Models ")
 
 
+
+#####################################################################################################################################
+#c("ajuste15b1","ajuste15b2","ajuste15b4") %>% 
+#  map(~formula.text(.x,"Death2",taulavariables = conductor,dt=dades))%>% 
+#  map(~glm(.x,data = dades, family = "binomial")) %>% 
+#  sjPlot::tab_model(digits=5, 
+#                    show.intercept = FALSE,
+#                    dv.labels = c("Mortality Models (unadjusted)", "Mortality Models (adjusted)","Mortality Models (adjusted)"),
+#                    show.se = FALSE,
+#                    title = "Mortality models,Confidence Interval Profile likelihood ratio estimator, Chi-Square GLM",
+#                    p.style = "numeric_stars")
+######################################################################################################################################
+
+
+
 c("ajuste15b1","ajuste15b2","ajuste15b4") %>% 
   map(~formula.text(.x,"Death2",taulavariables = conductor,dt=dades))%>% 
   map(~logistf(.x,data = dades, firth=FALSE)) %>% 
@@ -439,31 +454,33 @@ c("ajuste15b1","ajuste15b2","ajuste15b4") %>%
                     title = "Mortality models,Confidence Interval Profile likelihood ratio estimator, Chi-Square",
                     p.style = "numeric_stars")
 
-print("Summary Model 1 ")
 
-
+print("example of estimating an interval with the Profile log-likelihood method MODEL1  ")
 m00<-logistf(Death2 ~ DG.MACR,firth=FALSE,family=binomial,data = dades)
 summary(m00)
-
 print("Profile likelihood ratio estimator ,Model1:Mortality Models (unadjusted) ")
 plot(profile(m00,variable="DG.MACRYes", legends = TRUE))
 
 
-print("SE ,Model1:Mortality Models (unadjusted) ")
-m1<-c("ajuste15b1") %>% formula.text("Death2",taulavariables = conductor,dt=dades)%>%glm(data = dades,family = "binomial") 
-summary(m1)$coefficients[2,2]
+c("ajuste15b1","ajuste15b2","ajuste15b4") %>% 
+  map(~formula.text(.x,"Death2",taulavariables = conductor,dt=dades))%>% 
+  map(~logistf(.x,data = dades, pl = FALSE,firth=FALSE)) %>% 
+  sjPlot::tab_model(digits=5, 
+                    show.intercept = FALSE,
+                    dv.labels = c("Mortality Models (unadjusted)", "Mortality Models (adjusted)","Mortality Models (adjusted)"),
+                    show.se = FALSE,
+                    title = "Mortality models,Confidence Interval Wald estimator, Normality",
+                    p.style = "numeric_stars")
 
 
 
-#c("ajuste15b1","ajuste15b2","ajuste15b4") %>% 
-#  map(~formula.text(.x,"Death2",taulavariables = conductor,dt=dades))%>% 
-#  map(~glm(.x,data = dades, family = "binomial")) %>% 
-#  sjPlot::tab_model(digits=5, 
-#                    show.intercept = TRUE,
-#                    dv.labels = c("Mortality Models (unadjusted)", "Mortality Models (adjusted)","Mortality Models (adjusted)"),
-#                    show.se = TRUE,
-#                    title = "Mortality models",
-#                    p.style = "numeric_stars")
+print("se(coef) of Models Mortality Models ,Confidence Interval Wald estimator, Normality ")
+
+c("ajuste15b1","ajuste15b2","ajuste15b4") %>% 
+  map(~formula.text(.x,"Death2",taulavariables = conductor,dt=dades))%>% 
+     map(~summary(logistf(.x,data = dades, pl = FALSE,firth=FALSE)))
+
+
 
 
 
@@ -609,70 +626,30 @@ c("ajuste16a","ajuste16b","ajuste16c","ajuste16d") %>%
                     p.style = "numeric_stars")
 
 
-
-
-#c("ajuste16a","ajuste16b","ajuste16c","ajuste16d") %>% 
-#  map(~formula.text(.x,"Death2",taulavariables = conductor,dt=dades))%>% 
-#  map(~glm(.x,data = dades, family = "binomial")) %>% 
-#  sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Mortality Models (adjusted)", "Mortality Models (adjusted)","Mortality Models (adjusted)","Mortality Models (adjusted)"),
-#                    show.se = FALSE,
-#                    title = "Mortality models",
-#                    p.style = "numeric_stars")
-
-
-
+c("ajuste16a","ajuste16b","ajuste16c","ajuste16d") %>% 
+  map(~formula.text(.x,"Death2",taulavariables = conductor,dt=dades))%>% 
+  map(~logistf(.x,data = dades,pl = FALSE, firth=FALSE)) %>% 
+  sjPlot::tab_model(digits=5, 
+                    show.intercept = FALSE,
+                    dv.labels = c("Mortality Models (adjusted)", "Mortality Models (adjusted)","Mortality Models (adjusted)","Mortality Models (adjusted)"),
+                    show.se = FALSE,
+                     title = "Mortality models,Confidence Interval Wald estimator, Normality",
+                    p.style = "numeric_stars")
 
 
 
 
-#fisher scoring:
-#summary(m1)
+print("se(coef) of Models Mortality Models ,Confidence Interval Wald estimator, Normality ")
 
-#exp(confint(m1))
-
-#wald:
-#exp(confint.default(m1))
-
-#summary(m1)
-#confint(m1)
-
-
-
-#I just discovered that someone answered this question in another post. 
-#The answer is, confint uses profile confidence intervals, 
-#whereas I was computing a Wald confidence interval (which can equivalently be computed using confint.default).
-
-   
-   
-##Profile likelihood ratio! m1 
-#m4<-c("ajuste16a") %>% formula.text("Death2",taulavariables = conductor,dt=dades)%>%glm(data = dades,family = "binomial") 
-#m5<-c("ajuste16b") %>% formula.text("Death2",taulavariables = conductor,dt=dades)%>%glm(data = dades,family = "binomial") 
-#m6<-c("ajuste16c") %>% formula.text("Death2",taulavariables = conductor,dt=dades)%>%glm(data = dades,family = "binomial") 
-#m7<-c("ajuste16d") %>% formula.text("Death2",taulavariables = conductor,dt=dades)%>%glm(data = dades,family = "binomial") 
-
-
-
-
-#print("Confidence Interval Profile likelihood ratio estimator, CHI-SQUARE")
-#exp(confint(m4))
-#exp(confint(m5))
-#exp(confint(m6))
-#exp(confint(m7))
-
-#print("Confidence Interval wald estimator, Z-NORMAL")
-
-#exp(confint.default(m4))
-#exp(confint.default(m5))
-#exp(confint.default(m6))
-#exp(confint.default(m7))
-
-
-
+c("ajuste16a","ajuste16b","ajuste16c","ajuste16d") %>% 
+  map(~formula.text(.x,"Death2",taulavariables = conductor,dt=dades))%>% 
+  map(~summary(logistf(.x,data = dades,pl = FALSE, firth=FALSE)))
 
 
 
 
 ```
+
 ## 2.2. ICU admission Multivariable analysis on subgroup with complete data for all variables.Estimation of crude and adjusted ORs using Logistic Regression models (DM1+DM2,n=406)
 
 
@@ -785,6 +762,26 @@ c("ajuste15b1","ajuste15b2","ajuste15b4","ajuste15b5") %>%
 
 
 
+c("ajuste15b1","ajuste15b2","ajuste15b4","ajuste15b5") %>% 
+  map(~formula.text(.x,"Ad_UCI2",taulavariables = conductor,dt=dades))%>% 
+  map(~logistf(.x,data = dades, pl = FALSE,firth=FALSE)) %>% 
+  sjPlot::tab_model(digits=5, 
+                    show.intercept = FALSE,
+                    dv.labels = c("ICU admission Models (adjusted)", "ICU admission Models (adjusted)","ICU admission Models (adjusted)","ICU admission Models (adjusted)"),
+                    show.se = FALSE,
+                    title = "ICU admission models,Confidence Interval Wald estimator, Normality",
+                    p.style = "numeric_stars")
+
+
+
+print("se(coef) of Models Mortality Models ,Confidence Interval Wald estimator, Normality ")
+
+c("ajuste15b1","ajuste15b2","ajuste15b4","ajuste15b5") %>% 
+  map(~formula.text(.x,"Ad_UCI2",taulavariables = conductor,dt=dades))%>% 
+  map(~summary(logistf(.x,data = dades, pl = FALSE,firth=FALSE)))
+
+
+
 
 ```
 ## 2.3. Use of IMV on admission Multivariable analysis on subgroup with complete data for all variables.Estimation of crude and adjusted ORs using Logistic Regression models (DM1+DM2,n=406)
@@ -862,15 +859,23 @@ map(~formula.text(.x,"EV1.Mechanical_ventialtion2",taulavariables = conductor,dt
                     p.style = "numeric_stars")
 
 
+c("ajuste15b1","ajuste15b2","ajuste15b4") %>% 
+ map(~formula.text(.x,"EV1.Mechanical_ventialtion2",taulavariables = conductor,dt=dades))%>% 
+  map(~logistf(.x,data = dades, pl = FALSE,firth=FALSE)) %>% 
+  sjPlot::tab_model(digits=5, 
+                    show.intercept = FALSE,
+                    dv.labels = c("Use of IMV on admission Models (unadjusted)", "Use of IMV on admission Models (adjusted)","Use of IMV on admission models (adjusted)"),
+                    show.se = FALSE,
+                    title = "Use of IMV on ICU admission models,Confidence Interval Wald estimator, Normality",
+                    p.style = "numeric_stars")
 
-#c("ajuste15b1","ajuste15b2","ajuste15b4") %>% 
-#  map(~formula.text(.x,"EV1.Mechanical_ventialtion2",taulavariables = conductor,dt=dades))%>% 
-#  map(~glm(.x,data = dades, family = "binomial")) %>% 
-# sjPlot::tab_model(digits=3, show.intercept = F,dv.labels = c("Use of IMV on admission Models (unadjusted)", "Use of IMV on admission Models (adjusted)","Use of IMV on admission models (adjusted)"),
-#                    show.se = FALSE,
-#                    title = "ICU admission  models",
-#                    p.style = "numeric_stars")
 
+
+print("se(coef) of Models Mortality Models ,Confidence Interval Wald estimator, Normality ")
+
+c("ajuste15b1","ajuste15b2","ajuste15b4") %>% 
+ map(~formula.text(.x,"EV1.Mechanical_ventialtion2",taulavariables = conductor,dt=dades))%>% 
+  map(~summary(logistf(.x,data = dades, pl = FALSE,firth=FALSE)))
 
 
 
@@ -972,6 +977,28 @@ c("ajuste15b1","ajuste15b2","ajuste15b4","ajuste15b5") %>%
                     p.style = "numeric_stars")
 
 
+c("ajuste15b1","ajuste15b2","ajuste15b4","ajuste15b5") %>% 
+ map(~formula.text(.x,"Death_DG_Ad_UCI2",taulavariables = conductor,dt=dades))%>% 
+  map(~logistf(.x,data = dades,pl = FALSE,firth=FALSE)) %>%  
+  sjPlot::tab_model(digits=5, 
+                    show.intercept = FALSE,
+                    dv.labels = c("Death/ICU admission  models (unadjusted)", "Death/ICU admission  models (adjusted)","Death/ICU admission  models (adjusted)","Death/ICU admission  models (adjusted)"),
+                    show.se = FALSE,
+                    title = "Death/ICU admission models,Confidence Interval Wald estimator, Normality ",
+                    p.style = "numeric_stars")
+                    
+                    
+                   
+
+
+
+print("se(coef) of Models Mortality Models ,Confidence Interval Wald estimator, Normality ")
+
+c("ajuste15b1","ajuste15b2","ajuste15b4","ajuste15b5") %>% 
+ map(~formula.text(.x,"Death_DG_Ad_UCI2",taulavariables = conductor,dt=dades))%>% 
+  map(~summary(logistf(.x,data = dades, pl = FALSE,firth=FALSE)))
+
+#Mortality models,Confidence Interval Wald estimator, Normality
 
 
 #c("ajuste15b1","ajuste15b2","ajuste15b4","ajuste15b5") %>% 
