@@ -1,3 +1,21 @@
+#13.05.2022:
+
+#Hola Ray,
+
+#Lo que tenemos que acabar del análisis de macrovascular es el mismo análisis que hiciste (meta-análisis )
+#para la mortalidad aplicarlo para outcomes secundarios:
+
+#ICU admission y uso de IMV , en el caso de primero (ICU) todas las bases de datos lo tienen,
+#y en caso de IMV faltaria solo de barcelona, 
+
+#pero se puede hacer con el resto. 
+#Mira por favor lo que hicimos para mortalidad 
+
+#y hay que aplicar lo mismo para IMV y ICU, 
+#cuánto tiempo necesitarías?
+  
+#Gracias
+
 
 # [16.12.2021]
 
